@@ -2,6 +2,9 @@
 #ifdef IBMPC
 #include <stdlib.h>
 #endif
+#ifdef WINDOWS
+#include <string.h>
+#endif
 #include "misc.h"
 #include "defs.h"
 #include "cvt.h"

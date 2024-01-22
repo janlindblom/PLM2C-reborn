@@ -1,3 +1,6 @@
+#ifdef WINDOWS
+#include <stdio.h>
+#endif
 #include "misc.h"
 #include "defs.h"
 #include "cvt.h"

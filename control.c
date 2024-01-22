@@ -1,3 +1,9 @@
+#ifdef WINDOWS
+#include <string.h>
+#endif
+#ifdef MODERN
+#include "control.h"
+#endif
 #include "misc.h"
 #include "defs.h"
 #include "cvt.h"

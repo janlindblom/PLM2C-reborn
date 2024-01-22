@@ -6,6 +6,10 @@
 #include "struct.h"
 #include "tokens.h"
 #include "tkn_ext.h"
+#ifdef MODERN
+#include "control.h"
+#include "token.h"
+#endif
 
 BOOLEAN		parsing_literal;
 TOKEN		literal_token, eof_token;
@@ -20,8 +24,12 @@ extern	char	current_file_name[];
  *	get_token() -	Fetch a token from the buffer and return type,
  *			pointer and associated white space.
  */
+#ifdef MODERN
+int get_token(TOKEN	*token)
+#else
 get_token(token)
 TOKEN	*token;
+#endif
 {
     RESERVED_WORD	*word_ptr;
     RESERVED_OPERATOR	*op_ptr;

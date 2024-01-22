@@ -40,7 +40,9 @@ typedef	unsigned char	BOOLEAN;
 
 #define NONE	0
 
+#ifndef MODERN
 char	*strcat(), *strncat(), *strcpy(), *strncpy();
+#endif
 #ifdef IBMPC
 int	sprintf();
 #endif

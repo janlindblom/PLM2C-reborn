@@ -1,10 +1,14 @@
 #ifdef IBMPC
 #include <alloc.h>
 #endif
+#ifdef WINDOWS
+#include <stdlib.h>
+#endif
 #include "misc.h"
 #include "defs.h"
 #include "cvt.h"
 #include "struct.h"
+
 
 /*
  *	Memory allocation and deallocation routines.

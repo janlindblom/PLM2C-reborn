@@ -6,6 +6,9 @@
 #include "struct.h"
 #include "tokens.h"
 #include "tkn_ext.h"
+#ifdef MODERN
+#include "error.h"
+#endif
 
 extern	BOOLEAN	syntax_error;
 
@@ -82,8 +85,12 @@ char	error_eol;
  *			Called when an unrecognised or unprocessable token
  *			appears.
  */
+#ifdef MODERN
+void parse_error(char *error_string)
+#else
 void parse_error(error_string)
 char	*error_string;
+#endif
 {
 	if (syntax_error)
 			/* Already had an error on this line */

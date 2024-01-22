@@ -7,6 +7,9 @@
 #include "cvt.h"
 #include "struct.h"
 #include "tokens.h"
+#ifdef MODERN
+#include "declare.h"
+#endif
 
 BOOLEAN		syntax_error;
 
@@ -17,8 +20,12 @@ extern	int	line_count;
  *	Determine statement type and call appropriate parse routine.
  *	Return statement class or, if a reserved word, reserved word token.
  */
+#ifdef MODERN
+int parse_statement(TOKEN *first_token)
+#else
 parse_statement(first_token)
 TOKEN	*first_token;
+#endif
 {
 	int	token_type;
 

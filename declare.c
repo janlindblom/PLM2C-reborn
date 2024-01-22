@@ -1,3 +1,6 @@
+#ifdef WINDOWS
+#include <stdlib.h>
+#endif
 #include "misc.h"
 #include "defs.h"
 #include "cvt.h"
@@ -171,8 +174,12 @@ TOKEN	*sep_token;
  *		where:
  *	<member> ::= { <id> | ( <id> [ ,<id> ] ... ) } [ ( <numeric> ) ] <type>
  */
+#ifdef MODERN
+void parse_structure(DECL_MEMBER **list_ptr)
+#else
 void parse_structure(list_ptr)
 DECL_MEMBER	**list_ptr;
+#endif
 {
 	DECL_MEMBER	*struct_ptr, *last_struct;
 	TOKEN		token;
@@ -224,9 +231,13 @@ DECL_MEMBER	**list_ptr;
  *	Passed initial token.
  *	Returns RESERVED if appropriate type found, else returns END_OF_LINE.
  */
+#ifdef MODERN
+int parse_type(DECL_MEMBER *el_ptr, TOKEN *token)
+#else
 parse_type(el_ptr, token)
 DECL_MEMBER	*el_ptr;
 TOKEN		*token;
+#endif
 {
 	TOKEN	*temp_token;
 	int	token_class;
@@ -286,9 +297,13 @@ TOKEN		*token;
  *	Parse a DECLARE element.
  *	Return token terminating DECLARE element.
  */
+#ifdef MODERN
+int get_element(DECL_MEMBER **element, TOKEN *token)
+#else
 get_element(element, token)
 DECL_MEMBER	**element;
 TOKEN		*token;
+#endif
 {
 	DECL_MEMBER	*el_ptr;
 	TOKEN		temp_token, eof_token;
@@ -466,8 +481,12 @@ TOKEN		*token;
  *	Parse a DECLARE list.
  *	Passed a pointer to a DECL, returns with DECL filled.
  */
+#ifdef MODERN
+void get_decl_list(DECL *decl)
+#else
 get_decl_list(decl)
 DECL	*decl;
+#endif
 {
 	DECL_MEMBER	*el_ptr, *decl_ptr;
 	TOKEN		token;
@@ -494,8 +513,12 @@ DECL	*decl;
 /*
  *	Parse a DECLARE statement.
  */
+#ifdef MODERN
+void parse_declare(TOKEN *first_token)
+#else
 parse_declare(first_token)
 TOKEN	*first_token;
+#endif
 {
 	DECL		decl;
 

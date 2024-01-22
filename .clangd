@@ -1,0 +1,4 @@
+CompileFlags:
+  Add: [-DMODERN, -DWINDOWS]
+  Remove: []
+  Compiler: gcc
