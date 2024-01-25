@@ -1,4 +1,7 @@
 #ifdef MODERN
+#include <stdbool.h>
+#include "misc.h"
+#include "defs.h"
 #pragma once
 #endif
 /*

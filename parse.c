@@ -12,6 +12,16 @@
 #include "cvt_id.h"
 #include "tokens.h"
 #ifdef MODERN
+#include <stdlib.h>
+
+#include "mem.h"
+#include "token.h"
+#include "io.h"
+#include "convert.h"
+#include "error.h"
+#include "declare.h"
+#include "context.h"
+#include "decl_out.h"
 #include "parse.h"
 #endif
 
@@ -23,8 +33,12 @@ extern	char	*out_string;
  *	Parse a procedure parameter list.
  *	Return head of linked list of parameters.
  */
+#ifdef MODERN
+void get_param_list(PARAM_LIST **param_head)
+#else
 void get_param_list(param_head)
 PARAM_LIST	**param_head;
+#endif
 {
 	PARAM_LIST	*list_ptr, *param_ptr;
 	int		token_class;
@@ -63,9 +77,13 @@ PARAM_LIST	**param_head;
  *	param_list and those not.  Return pointers to head of both
  *	DECL_MEMBER lists.
  */
+#ifdef MODERN
+void parse_param_list(PARAM_LIST *param_list, DECL **decl_list, DECL **extra_decl_list)
+#else
 void parse_param_list(param_list, decl_list, extra_decl_list)
 PARAM_LIST	*param_list;
 DECL		**decl_list, **extra_decl_list;
+#endif
 {
 	DECL		*extra_decl, *extra_decl_ptr;
 	DECL		*list, *list_ptr;
@@ -244,9 +262,13 @@ DECL		**decl_list, **extra_decl_list;
 /*
  *	Parse until desired token type appears
  */
+#ifdef MODERN
+void parse_till(int type, TOKEN *token)
+#else
 void parse_till(type, token)
 int	type;
 TOKEN	*token;
+#endif
 {
 	while (get_token(token) != type)
 		out_token(token);
@@ -314,8 +336,12 @@ void check_eol()
  *	Returns with next_token terminating variable.
  *	Handles [ .<identifier> ] ...
  */
+#ifdef MODERN
+int parse_simple_variable(TOKEN *token, TOKEN *next_token)
+#else
 int parse_simple_variable(token, next_token)
 TOKEN	*token, *next_token;
+#endif
 {
 	int	token_class;
 
@@ -331,8 +357,13 @@ TOKEN	*token, *next_token;
 			return ERROR;
 		}
 			/* Add .<identifier> to original token name */
+#ifdef MODERN
+		strcat_s(token->token_name, 1, ".");
+		strcat_s(token->token_name, strlen(next_token->token_name), next_token->token_name);
+#else
 		(void) strcat(token->token_name, ".");
 		(void) strcat(token->token_name, next_token->token_name);
+#endif
 			/* Parse for additional member */
 		return parse_simple_variable(token, next_token);
 	}
@@ -344,10 +375,14 @@ TOKEN	*token, *next_token;
  *	If variable has BASED attribute, output (*based_name).
  *	Otherwise, output ident.
  */
+#ifdef MODERN
+void out_ident(TOKEN *ident, DECL_MEMBER *decl, DECL_ID *decl_id)
+#else
 void out_ident(ident, decl, decl_id)
 TOKEN		*ident;
 DECL_MEMBER	*decl;
 DECL_ID		*decl_id;
+#endif
 {
 	if (decl->at_ptr || decl_id->is_ext_at) {
 		out_white_space(ident);
@@ -372,10 +407,14 @@ DECL_ID		*decl_id;
  *	Returns with token terminating variable.
  *	Handles <member> { [ ( <expression> ) ] [ .<identifier> ] }
  */
+#ifdef MODERN
+int parse_member(TOKEN *token, DECL_MEMBER *decl, DECL_ID *decl_id)
+#else
 int parse_member(token, decl, decl_id)
 TOKEN		*token;
 DECL_MEMBER	*decl;
 DECL_ID		*decl_id;
+#endif
 {
 	int		token_class;
 	TOKEN		member;
@@ -448,8 +487,14 @@ DECL_ID		*decl_id;
 		}
 
 			/* Find variable in list */
+#ifdef MODERN
+		if (!find_list_symbol(token, &decl->struct_list,
+					&var_decl, &var_decl_id))
+#else
 		if (!find_list_symbol(token, decl->struct_list,
-					&var_decl, &var_decl_id)) {
+					&var_decl, &var_decl_id))
+#endif
+		{
 			parse_error("Undefined structure member");
 			return ERROR;
 		}
@@ -469,10 +514,14 @@ DECL_ID		*decl_id;
  *	Returns with token terminating variable.
  *	Handles { [ ( <expression> ) ] [ .<identifier> ] } ...
  */
+#ifdef MODERN
+int parse_variable(TOKEN *token, DECL_MEMBER **var_decl, DECL_ID **var_decl_id)
+#else
 int parse_variable(token, var_decl, var_decl_id)
 TOKEN		*token;
 DECL_MEMBER	**var_decl;
 DECL_ID		**var_decl_id;
+#endif
 {
 	if (!find_symbol(token, var_decl, var_decl_id)) {
 		parse_error("Undefined variable");
@@ -486,10 +535,14 @@ DECL_ID		**var_decl_id;
  *	See if token is in cvt_list.
  *	If found, return pointer to conversion string.
  */
+#ifdef MODERN
+int check_cvt_id(TOKEN *token, CVT_ID *cvt_id, char **cvt_string)
+#else
 int check_cvt_id(token, cvt_id, cvt_string)
 TOKEN	*token;
 CVT_ID	*cvt_id;
 char	**cvt_string;
+#endif
 {
 		/* Check each string in cvt_id */
 	while (*(cvt_id->id_name)) {
@@ -508,8 +561,12 @@ char	**cvt_string;
 /*
  *	Parse function call
  */
+#ifdef MODERN
+int parse_function(TOKEN *token)
+#else
 parse_function(token)
 TOKEN	*token;
+#endif
 {
 	int		token_class;
 	BOOLEAN		left_shift, right_shift;
@@ -612,8 +669,12 @@ TOKEN	*token;
  *	Parse expression and output appropriate tokens.
  *	Return token at end of expression.
  */
+#ifdef MODERN
+int parse_expression(TOKEN *token)
+#else
 parse_expression(token)
 TOKEN	*token;
+#endif
 {
     int		token_class;
     int		i, last_class, temp_class;
@@ -694,11 +755,19 @@ TOKEN	*token;
 			do {
 				token_class = get_token(token);
 				if (token_class == STRING)
+#ifdef MODERN
+					strcat_s(string_const, strlen(token->token_name), token->token_name);
+#else
 					(void) strcat(string_const, token->token_name);
+#endif
 				else
 				if (token_class == NUMERIC) {
 					cvt_octal(token, octal_const);
+#ifdef MODERN
+					strcat_s(string_const, strlen(octal_const), octal_const);
+#else
 					(void) strcat(string_const, octal_const);
+#endif
 				} else {
 					parse_error("Illegal constant");
 					return ERROR;
@@ -1476,7 +1545,11 @@ TOKEN	*first_token;
 /*
  *	Statement started with ':'
  */
+#ifdef MODERN
+void parse_label()
+#else
 parse_label()
+#endif
 {
 	parse_error("Illegal label");
 }
@@ -1484,8 +1557,12 @@ parse_label()
 /*
  *	End of line (Null statement)
  */
+#ifdef MODERN
+void parse_eol(TOKEN *first_token)
+#else
 parse_eol(first_token)
 TOKEN	*first_token;
+#endif
 {
 	out_white_space(first_token);
 	out_char(';');
@@ -1555,8 +1632,12 @@ void parse_outport()
 /*
  *	OUTPUT statement
  */
+#ifdef MODERN
+void parse_output(TOKEN *first_token)
+#else
 parse_output(first_token)
 TOKEN	*first_token;
+#endif
 {
 	out_white_space(first_token);
 	out_str(FUNC_OUTPUT);
@@ -1566,8 +1647,12 @@ TOKEN	*first_token;
 /*
  *	OUTWORD statement
  */
+#ifdef MODERN
+void parse_outword(TOKEN *first_token)
+#else
 parse_outword(first_token)
 TOKEN	*first_token;
+#endif
 {
 	out_white_space(first_token);
 	out_str(FUNC_OUTWORD);
@@ -1577,8 +1662,12 @@ TOKEN	*first_token;
 /*
  *	OUTHWORD statement
  */
+#ifdef MODERN
+void parse_outhword(TOKEN *first_token)
+#else
 parse_outhword(first_token)
 TOKEN	*first_token;
+#endif
 {
 	out_white_space(first_token);
 	out_str(FUNC_OUTHWORD);

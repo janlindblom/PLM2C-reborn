@@ -3,6 +3,5 @@
 #include "misc.h"
 #include "struct.h"
 
-int get_token(TOKEN *first_token);
-void token_copy(TOKEN *src, TOKEN *dest);
+void out_decl(DECL *decl);
 #endif

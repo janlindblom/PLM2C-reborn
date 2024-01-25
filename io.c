@@ -6,6 +6,10 @@
 #include "cvt.h"
 #include "struct.h"
 #include "tokens.h"
+#ifdef MODERN
+#include "error.h"
+#include "io.h"
+#endif
 
 char	*out_string;
 char	last_out_ch;
@@ -20,17 +24,23 @@ extern	FILE	*ofd;
 extern	BOOLEAN	parsing_literal;
 extern	TOKEN	literal_token;
 
+#ifndef MODERN
 void out_char();
 void out_type();
+#endif
 
 /*
  *	Output data of specified length.
  *	If out_string is not NULL, append string to out_string.
  *	Otherwise write string to stdout.
  */
+#ifdef MODERN
+void out_data(char *string, int length)
+#else
 void out_data(string, length)
 char	*string;
 int	length;
+#endif
 {
 	if (length) {
 		if (out_string)
@@ -73,8 +83,12 @@ TOKEN	*token;
  *	Print white space, if any.  If start of white space string is not
  *	white, prefix with a space.
  */
+#ifdef MODERN
+void out_must_white(TOKEN *token)
+#else
 void out_must_white(token)
 TOKEN	*token;
+#endif
 {
 	if (!is_white(*(token->white_space_start)))
 		out_char(' ');
@@ -85,8 +99,12 @@ TOKEN	*token;
  *	Print all white space up first new-line (if any).
  *	Move white_space_start to point past first new-line.
  */
+#ifdef MODERN
+void out_pre_line(TOKEN *token)
+#else
 void out_pre_line(token)
 TOKEN	*token;
+#endif
 {
 	while ((token->white_space_start < token->white_space_end) &&
 		(*token->white_space_start != '\n')) {
@@ -129,8 +147,12 @@ TOKEN	*token;
 /*
  *	Output token name
  */
+#ifdef MODERN
+void out_token_name(TOKEN *token)
+#else
 void out_token_name(token)
 TOKEN	*token;
+#endif
 {
 	if (is_a_type(token))
 		out_type(token->token_type);
@@ -141,8 +163,12 @@ TOKEN	*token;
 /*
  *	Output white space and token name
  */
+#ifdef MODERN
+void out_token(TOKEN *token)
+#else
 void out_token(token)
 TOKEN	*token;
+#endif
 {
 	out_white_space(token);
 	out_token_name(token);
@@ -161,8 +187,12 @@ TOKEN	*token;
 /*
  *	Output case converted token name
  */
+#ifdef MODERN
+void out_cvt_name(TOKEN *token)
+#else
 void out_cvt_name(token)
 TOKEN	*token;
+#endif
 {
 	char	*ptr;
 
@@ -180,8 +210,12 @@ TOKEN	*token;
 /*
  *	Output string
  */
+#ifdef MODERN
+void out_str(char *string)
+#else
 void out_str(string)
 char	*string;
+#endif
 {
 	out_data(string, strlen(string));
 }
@@ -189,8 +223,12 @@ char	*string;
 /*
  *	Output character
  */
+#ifdef MODERN
+void out_char(char ch)
+#else
 void out_char(ch)
 char	ch;
+#endif
 {
 	out_data(&ch, 1);
 }
@@ -207,8 +245,12 @@ void out_to_start()
 /*
  *	Output type
  */
+#ifdef MODERN
+void out_type(int type)
+#else
 void out_type(type)
 int	type;
+#endif
 {
 	switch (type) {
 
@@ -303,9 +345,13 @@ int	len;
 /*
  *	Convert NUMERIC constant to octal constant
  */
+#ifdef MODERN
+void cvt_octal(TOKEN *token, char *octal_string)
+#else
 void cvt_octal(token, octal_string)
 TOKEN	*token;
 char	octal_string[];
+#endif
 {
 	int	octal;
 	char	ch, *ptr;

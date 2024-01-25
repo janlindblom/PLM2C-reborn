@@ -1,11 +1,23 @@
-#ifdef WINDOWS
+#ifdef MODERN
 #include <stdlib.h>
+#include <string.h>
 #endif
+
 #include "misc.h"
 #include "defs.h"
 #include "cvt.h"
 #include "struct.h"
 #include "tokens.h"
+
+#ifdef MODERN
+#include "token.h"
+#include "mem.h"
+#include "parse.h"
+#include "error.h"
+#include "decl_out.h"
+#include "context.h"
+#include "declare.h"
+#endif
 
 extern	char	*text_ptr;
 extern	char	*out_string;
@@ -17,7 +29,11 @@ extern	char	*out_string;
 /*
  *	Skip to closing right parenthesis
  */
+#ifdef MODERN
+void find_right_paren()
+#else
 find_right_paren()
+#endif
 {
 	TOKEN	token;
 	int	token_class;
@@ -37,8 +53,12 @@ find_right_paren()
 /*
  *	Copy an element from source to destination
  */
+#ifdef MODERN
+void element_copy(DECL_MEMBER *src, DECL_MEMBER *dest)
+#else
 element_copy(src, dest)
 DECL_MEMBER	*src, *dest;
+#endif
 {
 		/* Don't copy name list */
 	dest->name_list = NULL;
@@ -61,9 +81,13 @@ DECL_MEMBER	*src, *dest;
  *		( <id> [BASED <id>[.<id>]] [ ,<id> [BASED <id>[.<id>]] ] ... )
  *	Return token following variable list.
  */
+#ifdef MODERN
+int get_var_list(DECL_ID **list_ptr, TOKEN *sep_token)
+#else
 get_var_list(list_ptr, sep_token)
 DECL_ID	**list_ptr;
 TOKEN	*sep_token;
+#endif
 {
 	DECL_ID	*var_ptr, *last_var;
 	TOKEN	*token;
@@ -310,9 +334,9 @@ TOKEN		*token;
 	int		token_class;
 	char		*tmp_text_ptr;
 	char		*tmp_out_string;
-
+#ifndef MODERN
 	char		*get_mem();
-
+#endif
 	get_element_ptr(element);
 
 		/* Point to element */
@@ -351,6 +375,7 @@ TOKEN		*token;
 		}
 
 		el_ptr->literal = get_mem(MAX_LITERAL_SIZE);
+
 #ifdef PARSE_LITERALS
 			/* Parse literal string if only one token in string */
 		tmp_text_ptr = text_ptr;

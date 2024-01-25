@@ -46,10 +46,14 @@ DECL_ID		**decl_id;
  *	in decl_found, and return TRUE.
  *	If not found, return null pointer in decl_found, and return FALSE.
  */
+#ifdef MODERN
+int find_list_symbol(TOKEN *symbol, DECL_MEMBER **decl_ptr, DECL_MEMBER **decl_found, DECL_ID **decl_id)
+#else
 find_list_symbol(symbol, decl_ptr, decl_found, decl_id)
 TOKEN		*symbol;
 DECL_MEMBER	*decl_ptr, **decl_found;
 DECL_ID		**decl_id;
+#endif
 {
 	for (*decl_found = decl_ptr; *decl_found;
 			*decl_found = (*decl_found)->next_member) {
@@ -67,10 +71,14 @@ DECL_ID		**decl_id;
  *	If not found, return null pointers in decl_found and decl_id,
  *	and return FALSE.
  */
+#ifdef MODERN
+int find_symbol(TOKEN *symbol, DECL_MEMBER **decl_found, DECL_ID **decl_id)
+#else
 find_symbol(symbol, decl_found, decl_id)
 TOKEN		*symbol;
 DECL_MEMBER	**decl_found;
 DECL_ID		**decl_id;
+#endif
 {
 	CONTEXT	*context_ptr;
 
@@ -86,8 +94,12 @@ DECL_ID		**decl_id;
 /*
  *	Add a declaration to current context
  */
+#ifdef MODERN
+void add_to_context(DECL_MEMBER *decl)
+#else
 add_to_context(decl)
 DECL_MEMBER	*decl;
+#endif
 {
 	DECL_MEMBER	*decl_ptr;
 
@@ -103,8 +115,12 @@ DECL_MEMBER	*decl;
 /*
  *	Add a DECL list to context and NULL the list pointer
  */
+#ifdef MODERN
+void add_decl_to_context(DECL *decl)
+#else
 add_decl_to_context(decl)
 DECL	*decl;
+#endif
 {
 	DECL	*decl_ptr;
 
@@ -143,7 +159,11 @@ TOKEN	*name;
 /*
  *	Pop current context and place on old context
  */
+#ifdef MODERN
+void pop_context()
+#else
 pop_context()
+#endif
 {
 	CONTEXT	*popped_context;
 

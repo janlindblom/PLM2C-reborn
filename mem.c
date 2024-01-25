@@ -1,15 +1,15 @@
 #ifdef IBMPC
 #include <alloc.h>
 #endif
-#ifdef WINDOWS
-#include <stdlib.h>
-#endif
 #include "misc.h"
 #include "defs.h"
 #include "cvt.h"
 #include "struct.h"
 #ifdef MODERN
+#include <stdlib.h>
+
 #include "mem.h"
+#include "error.h"
 #endif
 
 
@@ -28,7 +28,9 @@ unsigned int	size;
 #endif
 {
 	char	*malloc_ptr;
+#ifndef MODERN
 	void	*malloc();
+#endif
 
 	if ((malloc_ptr = (char *)malloc(size)) == NULL) {
 		parse_error("Out of memory");
@@ -51,8 +53,12 @@ CONTEXT	**context;
 /*
  *	Malloc memory for a TOKEN.
  */
+#ifdef MODERN
+void get_token_ptr(TOKEN **token)
+#else
 get_token_ptr(token)
 TOKEN	**token;
+#endif
 {
 	*token = (TOKEN *) get_mem(sizeof(TOKEN));
 }
@@ -60,8 +66,12 @@ TOKEN	**token;
 /*
  *	Malloc memory for a DECL_ID.
  */
+#ifdef MODERN
+void get_var_ptr(DECL_ID **var)
+#else
 get_var_ptr(var)
 DECL_ID	**var;
+#endif
 {
 	*var = (DECL_ID *) get_mem(sizeof(DECL_ID));
 	(*var)->name = NULL;
@@ -73,8 +83,12 @@ DECL_ID	**var;
 /*
  *	Free a linked list of variables.
  */
+#ifdef MODERN
+void free_var_list(DECL_ID *list_ptr)
+#else
 free_var_list(list_ptr)
 DECL_ID	*list_ptr;
+#endif
 {
 	DECL_ID	*next_ptr;
 
@@ -92,8 +106,12 @@ DECL_ID	*list_ptr;
 /*
  *	Malloc space for a DECL_MEMBER structure and return pointer.
  */
+#ifdef MODERN
+void get_element_ptr(DECL_MEMBER **element)
+#else
 get_element_ptr(element)
 DECL_MEMBER	**element;
+#endif
 {
 	DECL_MEMBER	*el_ptr;
 
@@ -122,8 +140,12 @@ DECL_MEMBER	**element;
 /*
  *	Free a DECL_MEMBER list.
  */
+#ifdef MODERN
+void free_decl_list(DECL_MEMBER *element)
+#else
 free_decl_list(element)
 DECL_MEMBER	*element;
+#endif
 {
 	DECL_MEMBER	*el_ptr;
 
@@ -150,8 +172,12 @@ DECL_MEMBER	*element;
 /*
  *	Malloc space for a procedure parameter
  */
+#ifdef MODERN
+void get_param_ptr(PARAM_LIST **param)
+#else
 get_param_ptr(param)
 PARAM_LIST	**param;
+#endif
 {
 	*param = (PARAM_LIST *) get_mem(sizeof(PARAM_LIST));
 	(*param)->next_param = NULL;
@@ -160,8 +186,12 @@ PARAM_LIST	**param;
 /*
  *	Free parameter list
  */
+#ifdef MODERN
+void free_param_list(PARAM_LIST *param_list)
+#else
 free_param_list(param_list)
 PARAM_LIST	*param_list;
+#endif
 {
 	PARAM_LIST	*param_ptr;
 
@@ -175,8 +205,12 @@ PARAM_LIST	*param_list;
 /*
  *	Malloc space for a DECLARE statement
  */
+#ifdef MODERN
+void get_decl_ptr(DECL **decl)
+#else
 get_decl_ptr(decl)
 DECL	**decl;
+#endif
 {
 	*decl = (DECL *) get_mem(sizeof(DECL));
 	(*decl)->decl_list = NULL;
@@ -186,8 +220,12 @@ DECL	**decl;
 /*
  *	Free DECL list
  */
+#ifdef MODERN
+void free_decl(DECL *decl_list)
+#else
 free_decl(decl_list)
 DECL	*decl_list;
+#endif
 {
 	DECL	*decl_ptr;
 

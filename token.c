@@ -472,12 +472,20 @@ TOKEN	*token;
 /*
  *	Copy source token to destination token
  */
+#ifdef MODERN
+void token_copy(TOKEN *src, TOKEN *dest)
+#else
 token_copy(src, dest)
 TOKEN	*src, *dest;
+#endif
 {
 	dest->token_class = src->token_class;
 	dest->token_type = src->token_type;
+#ifdef MODERN
+	strcpy_s(dest->token_name, strlen(src->token_name), src->token_name);
+#else
 	(void) strcpy(dest->token_name, src->token_name);
+#endif
 	dest->token_start = src->token_start;
 	dest->token_length = src->token_length;
 	dest->white_space_start = src->white_space_start;

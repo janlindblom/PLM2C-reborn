@@ -1,11 +1,12 @@
-#ifdef WINDOWS
-#include <stdio.h>
-#endif
 #include "misc.h"
 #include "defs.h"
 #include "cvt.h"
 #include "struct.h"
 #include "tokens.h"
+#ifdef MODERN
+#include <stdio.h>
+#include "decl_out.h"
+#endif
 
 extern	char	*text_ptr;
 extern	int	at_decl_count;
@@ -14,9 +15,13 @@ extern	char	at_decl_list[MAX_AT_DECLS][MAX_TOKEN_LENGTH];
 /*
  *	Output *<name> if use_parens == NULL, else (*<name>).
  */
+#ifdef MODERN
+void out_pointer(TOKEN *name, BOOLEAN use_parens)
+#else
 out_pointer(name, use_parens)
 TOKEN	*name;
 BOOLEAN	use_parens;
+#endif
 {
 		/* Use parentheses? */
 	if (use_parens) {
@@ -397,8 +402,12 @@ TOKEN		*decl_token;
 #endif
 }
 
+#ifdef MODERN
+void out_decl(DECL *decl)
+#else
 out_decl(decl)
 DECL		*decl;
+#endif
 {
 	DECL_MEMBER	*decl_list;
 
