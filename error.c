@@ -115,8 +115,12 @@ char	*error_string;
 /*
  *	parse_warning - Generate a warning message
  */
+#ifdef MODERN
+void parse_warning(char *warning_string)
+#else
 void parse_warning(warning_string)
 char	*warning_string;
+#endif
 {
 	parse_mesg(warning_string, "warning", '\0');
 }

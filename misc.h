@@ -1,9 +1,15 @@
 /*
  *	Miscellaneous defines
  */
+#ifndef MODERN
 typedef	unsigned char	BYTE;
 typedef	unsigned char	BOOLEAN;
+#else
+#include <stdbool.h>
+#include <stdint.h>
 
+typedef bool BOOLEAN;
+#endif
 
 #ifndef TRUE
 #define TRUE	1

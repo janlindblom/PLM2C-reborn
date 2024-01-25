@@ -14,6 +14,15 @@
 #include "struct.h"
 #include "tokens.h"
 #include "tkn_defs.h"
+#ifdef MODERN
+#include "context.h"
+#include "convert.h"
+#include "error.h"
+#include "io.h"
+#include "mem.h"
+#include "parse.h"
+#include "token.h"
+#endif
 
 char	*text_buffer, *text_ptr;
 int	line_count;
@@ -25,23 +34,36 @@ char	at_decl_list[MAX_AT_DECLS][MAX_TOKEN_LENGTH];
 FILE	*ofd;
 
 int	file_depth;
-
+#ifndef MODERN
 FILE	*fopen();
-
+#endif
 /*
  *	Get list of AT declaration variables for EXTERNAL declaration checks
  */
 void get_at_decl()
 {
+#ifdef MODERN
+	int i;
+	FILE *fd;
+#else
 	int	i, fd;
+#endif
 	char	ch;
 
 	at_decl_count = 0;
+#ifdef MODERN
+	if ((fopen_s(&fd, "at_decl.cvt", O_RDONLY)) == -1)
+#else
 	if ((fd = open("at_decl.cvt", O_RDONLY)) == -1)
+#endif
 			/* Not found */
 		return;
-
-	while (read(fd, &ch, 1) == 1) {
+#ifdef MODERN
+	while (fread(&ch, 1, 1, fd) == 1)
+#else
+	while (read(fd, &ch, 1) == 1)
+#endif
+	{
 	    i = 0;
 	    if (!is_a_char(ch)) {
 		fprintf(stderr, "Illegal identifier in line %d at_decl.cvt\n",
@@ -59,7 +81,12 @@ void get_at_decl()
 			ch -= 32;
 #endif
 		at_decl_list[at_decl_count][i++] = ch;
-		if (read(fd, &ch, 1) != 1) {
+#ifdef MODERN
+		if (fread(&ch, 1, 1, fd) != 1)
+#else
+		if (read(fd, &ch, 1) != 1)
+#endif
+		{
 			fprintf(stderr, "Unexpected EOF in at_decl.cvt\n");
 			exit(1);
 		}
@@ -72,10 +99,19 @@ void get_at_decl()
 /*
  *	Open specified file, init options, and parse.
  */
+#ifdef MODERN
+void cvt_file(char *file_name)
+#else
 void cvt_file(file_name)
 char	*file_name;
+#endif
 {
+#ifdef MODERN
+	int nr;
+	FILE *fd;
+#else
 	int		fd, nr;
+#endif
 	struct	stat	file_stat;
 	TOKEN		token, fname_token, token_module, token_do;
 	int		token_class;
@@ -83,9 +119,9 @@ char	*file_name;
 	char		*tmp_ptr;
 	int		tmp_line_count;
 	char		tmp_file_name[128];
-
+#ifndef MODERN
 	char		*get_mem();
-
+#endif
 		/* Is this the first file? */
 	if (file_depth) {
 			/* No - save old text pointers */
@@ -93,21 +129,39 @@ char	*file_name;
 		tmp_text_ptr = text_ptr;
 		tmp_line_ptr = line_ptr;
 		tmp_line_count = line_count;
+#ifdef MODERN
+		strcpy_s(tmp_file_name, strlen(current_file_name), current_file_name);
+#else
 		(void) strcpy(tmp_file_name, current_file_name);
+#endif
 	}
 
 		/* Save file name */
+#ifdef MODERN
+	strcpy_s(current_file_name, strlen(file_name), file_name);
+#else
 	(void) strcpy(current_file_name, file_name);
+#endif
 
 		/* Open file */
-	if ((fd = open(file_name, O_RDONLY)) == -1) {
+#ifdef MODERN
+	if (fopen_s(&fd, file_name, O_RDONLY) == -1)
+#else
+	if ((fd = open(file_name, O_RDONLY)) == -1)
+#endif
+	{
 		(void) fprintf(stderr, "Cannot open input file %s", file_name);
 		perror("");
 		exit(1);
 	}
 
 		/* Get length */
-	if (fstat(fd, &file_stat)) {
+#ifdef MODERN
+	if (stat(file_name, &file_stat))
+#else
+	if (fstat(fd, &file_stat))
+#endif
+	{
 		perror("Cannot stat input file");
 		exit(1);
 	}
@@ -116,14 +170,23 @@ char	*file_name;
 	text_buffer = get_mem((unsigned int) file_stat.st_size + 1);
 
 		/* Read file */
-	if ((nr = read(fd, text_buffer, (int) file_stat.st_size)) == -1) {
+#ifdef MODERN
+	if ((nr = fread(text_buffer, 1, (int) file_stat.st_size, fd)) == -1)
+#else
+	if ((nr = read(fd, text_buffer, (int) file_stat.st_size)) == -1)
+#endif
+	{
 		perror("Cannot read input file");
 		exit(1);
 	}
 
 		/* Insert End-of-file Mark */
 	text_buffer[nr] = '\0';
+#ifdef MODERN
+	fclose(fd);
+#else
 	(void) close(fd);
+#endif
 
 		/* Init pointers */
 	text_ptr = text_buffer;
@@ -134,14 +197,23 @@ char	*file_name;
 	out_init();
 
 		/* Start with initial context using file name */
+#ifdef MODERN
+	strcpy_s(fname_token.token_name, strlen(file_name), file_name);
+#else
 	(void) strcpy(fname_token.token_name, file_name);
+#endif
 	fname_token.token_class = IDENTIFIER;
 	new_context(MODULE, &fname_token);
 
 		/* Is this the first file? */
 	if (file_depth++ == 0) {
 			/* Yes - open output file */
-		if ((ofd = fopen(out_file_name, "w")) == NULL) {
+#ifdef MODERN
+		if (fopen_s(&ofd, out_file_name, "w") == -1)
+#else
+		if ((ofd = fopen(out_file_name, "w")) == NULL)
+#endif
+		{
 			(void) fprintf(stderr, "Cannot create output file %s",
 				out_file_name);
 			exit(1);
@@ -200,7 +272,11 @@ char	*file_name;
 		text_ptr = tmp_text_ptr;
 		line_ptr = tmp_line_ptr;
 		line_count = tmp_line_count;
+#ifdef MODERN
+		strcpy_s(current_file_name, strlen(tmp_file_name), tmp_file_name);
+#else
 		(void) strcpy(current_file_name, tmp_file_name);
+#endif
 	} else
 		exit(0);
 }
@@ -208,9 +284,13 @@ char	*file_name;
 /*
  *	Open file and init options
  */
+#ifdef MODERN
+int main(int argc, char *argv[])
+#else
 int main(argc, argv)
 int	argc;
 char	*argv[];
+#endif
 {
 	int	i;
 	char	ch;
@@ -231,9 +311,17 @@ char	*argv[];
 		i = strlen(argv[1]);
 
 		/* Append a '.c' */
+#ifdef MODERN
+	strncpy_s(out_file_name, strlen(argv[1]), argv[1], i);
+#else
 	(void) strncpy(out_file_name, argv[1], i);
+#endif
 	out_file_name[i] = '\0';
+#ifdef MODERN
+	strcat_s(out_file_name, 2, ".c");
+#else
 	(void) strcat(out_file_name, ".c");
+#endif
 	(void) printf("Output to: %s\n", out_file_name);
 
 		/* Get AT declaration list */

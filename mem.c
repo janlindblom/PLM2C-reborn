@@ -8,6 +8,9 @@
 #include "defs.h"
 #include "cvt.h"
 #include "struct.h"
+#ifdef MODERN
+#include "mem.h"
+#endif
 
 
 /*
@@ -17,8 +20,12 @@
 /*
  *	Allocate memory
  */
+#ifdef MODERN
+char *get_mem(unsigned int size)
+#else
 char *get_mem(size)
 unsigned int	size;
+#endif
 {
 	char	*malloc_ptr;
 	void	*malloc();

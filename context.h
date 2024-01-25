@@ -3,5 +3,6 @@
 #include "misc.h"
 #include "struct.h"
 
-int get_token(TOKEN *first_token);
+void init_context();
+void new_context(int type, TOKEN *name);
 #endif

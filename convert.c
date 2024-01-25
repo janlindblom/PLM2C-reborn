@@ -9,6 +9,10 @@
 #include "tokens.h"
 #ifdef MODERN
 #include "declare.h"
+#include "parse.h"
+#include "token.h"
+#include "error.h"
+#include "io.h"
 #endif
 
 BOOLEAN		syntax_error;
@@ -135,7 +139,11 @@ TOKEN	*first_token;
 	return first_token->token_class;
 }
 
+#ifdef MODERN
+int parse_new_statement()
+#else
 parse_new_statement()
+#endif
 {
 	TOKEN		first_token;
 
@@ -145,7 +153,11 @@ parse_new_statement()
 	return parse_statement(&first_token);
 }
 
+#ifdef MODERN
+void parse_file()
+#else
 parse_file()
+#endif
 {
 	while (parse_new_statement() != END_OF_FILE) ;
 }

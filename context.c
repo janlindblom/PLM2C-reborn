@@ -5,6 +5,9 @@
 #include "defs.h"
 #include "cvt.h"
 #include "struct.h"
+#ifdef MODERN
+#include "context.h"
+#endif
 
 /*
  *	Pointer to the current context
@@ -116,9 +119,13 @@ DECL	*decl;
 /*
  *	Push a new context of specified type and name
  */
+#ifdef MODERN
+void new_context(int type, TOKEN *name)
+#else
 new_context(type, name)
 int	type;
 TOKEN	*name;
+#endif
 {
 	CONTEXT	*new_context;
 
@@ -149,7 +156,11 @@ pop_context()
 /*
  *	Initializes context pointers
  */
+#ifdef MODERN
+void init_context()
+#else
 init_context()
+#endif
 {
 	context_head = NULL;
 	old_context = NULL;

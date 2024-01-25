@@ -1,3 +1,6 @@
+#ifdef MODERN
+#pragma once
+#endif
 /*
  *	Format of a token returned by get_token().
  */

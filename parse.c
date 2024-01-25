@@ -11,6 +11,9 @@
 #include "struct.h"
 #include "cvt_id.h"
 #include "tokens.h"
+#ifdef MODERN
+#include "parse.h"
+#endif
 
 extern	char	*text_buffer, *text_ptr;
 extern	int	line_count;
@@ -253,8 +256,12 @@ TOKEN	*token;
 /*
  *	Parse until END statement
  */
+#ifdef MODERN
+void parse_till_end(TOKEN *token)
+#else
 void parse_till_end(token)
 TOKEN	*token;
+#endif
 {
 	int	token_class;
 
@@ -777,8 +784,12 @@ TOKEN	*token;
  *	DO statement
  *	Handles DO;, DO CASE, DO WHILE, and iterative DO
  */
+#ifdef MODERN
+void parse_do(TOKEN *first_token)
+#else
 void parse_do(first_token)
 TOKEN	*first_token;
+#endif
 {
 	TOKEN		token;
 	int		token_class;
@@ -943,8 +954,12 @@ TOKEN	*first_token;
  *	END statement
  *	Handles END [ <identifier> ] ;
  */
+#ifdef MODERN
+void parse_end(TOKEN *first_token)
+#else
 parse_end(first_token)
 TOKEN	*first_token;
+#endif
 {
 	TOKEN	token;
 	int	token_class;
@@ -972,8 +987,12 @@ TOKEN	*first_token;
 /*
  *	IF statement
  */
+#ifdef MODERN
+void parse_if(TOKEN *first_token)
+#else
 parse_if(first_token)
 TOKEN	*first_token;
+#endif
 {
 	TOKEN	token;
 
@@ -993,7 +1012,11 @@ TOKEN	*first_token;
 /*
  *	THEN statement
  */
+#ifdef MODERN
+void parse_then()
+#else
 parse_then()
+#endif
 {
 	parse_error("Illegal use of THEN");
 }
@@ -1001,8 +1024,12 @@ parse_then()
 /*
  *	ELSE statement
  */
+#ifdef MODERN
+void parse_else(TOKEN *first_token)
+#else
 parse_else(first_token)
 TOKEN	*first_token;
+#endif
 {
 	out_white_space(first_token);
 	out_str("else");
@@ -1011,8 +1038,12 @@ TOKEN	*first_token;
 /*
  *	GOTO statement
  */
+#ifdef MODERN
+void parse_goto(TOKEN *first_token)
+#else
 parse_goto(first_token)
 TOKEN	*first_token;
+#endif
 {
 	TOKEN	token;
 
@@ -1030,8 +1061,12 @@ TOKEN	*first_token;
 /*
  *	GO TO statement
  */
+#ifdef MODERN
+void parse_go(TOKEN *first_token)
+#else
 parse_go(first_token)
 TOKEN	*first_token;
+#endif
 {
 	TOKEN	token;
 
@@ -1045,8 +1080,12 @@ TOKEN	*first_token;
  *	CALL statement
  *	Handles CALL <procedure name> [ ( <parameter list> ) ] ;
  */
+#ifdef MODERN
+void parse_call(TOKEN *first_token)
+#else
 void parse_call(first_token)
 TOKEN	*first_token;
+#endif
 {
 	TOKEN		token;
 	int		token_class;
@@ -1129,8 +1168,12 @@ TOKEN	*first_token;
  *	RETURN statement
  *	Handles RETURN [ <expression> ] ;
  */
+#ifdef MODERN
+void parse_return(TOKEN *first_token)
+#else
 parse_return(first_token)
 TOKEN	*first_token;
+#endif
 {
 	TOKEN	token;
 	int	token_class;
@@ -1151,8 +1194,12 @@ TOKEN	*first_token;
  *		Assignment
  *		Procedure statement
  */
+#ifdef MODERN
+void parse_identifier(TOKEN *first_token)
+#else
 void parse_identifier(first_token)
 TOKEN	*first_token;
+#endif
 {
 	TOKEN		token, next_token;
 	TOKEN		param_token, attrib_token, type_token;
@@ -1447,8 +1494,12 @@ TOKEN	*first_token;
 /*
  *	ENABLE or DISABLE statement
  */
+#ifdef MODERN
+void parse_int_ctl(TOKEN *first_token)
+#else
 void parse_int_ctl(first_token)
 TOKEN	*first_token;
+#endif
 {
 	TOKEN	token;
 	int	token_class;

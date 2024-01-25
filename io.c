@@ -53,8 +53,12 @@ int	length;
 /*
  *	Print white space
  */
+#ifdef MODERN
+void out_white_space(TOKEN *token)
+#else
 void out_white_space(token)
 TOKEN	*token;
+#endif
 {
 	int	length;
 
@@ -95,8 +99,12 @@ TOKEN	*token;
  *	Print all white space up to but not including last new-line.
  *	Move white_space_start to point to last new-line.
  */
+#ifdef MODERN
+void out_pre_white(TOKEN *token)
+#else
 void out_pre_white(token)
 TOKEN	*token;
+#endif
 {
 	char	*ptr;
 	int	length;
@@ -268,9 +276,13 @@ void out_init()
  *		'W' << 24 | 'X' << 16 | 'Y' << 8 | Z
  *	where len specifies the number of bytes in the string to output.
  */
+#ifdef MODERN
+void out_str_const(char *str_ptr, int len)
+#else
 void out_str_const(str_ptr, len)
 char	*str_ptr;
 int	len;
+#endif
 {
 	while (len-- && *str_ptr) {
 		out_char('\'');
