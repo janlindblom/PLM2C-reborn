@@ -42,8 +42,12 @@ unsigned int	size;
 /*
  *	Generate a new context.
  */
+#ifdef MODERN
+void get_context_ptr(CONTEXT **context)
+#else
 get_context_ptr(context)
 CONTEXT	**context;
+#endif
 {
 	*context = (CONTEXT *) get_mem(sizeof(CONTEXT));
 	(*context)->decl_head = NULL;

@@ -10,6 +10,7 @@ void free_var_list(DECL_ID *list_ptr);
 
 char *get_mem(unsigned int size);
 
+void get_context_ptr(CONTEXT **context);
 void get_decl_ptr(DECL **decl);
 void get_element_ptr(DECL_MEMBER **element);
 void get_param_ptr(PARAM_LIST **param);

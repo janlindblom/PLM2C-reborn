@@ -9,6 +9,7 @@ void init_context();
 void new_context(int type, TOKEN *name);
 void pop_context();
 
-int find_list_symbol(TOKEN *symbol, DECL_MEMBER **decl_ptr, DECL_MEMBER **decl_found, DECL_ID **decl_id);
-int find_symbol(TOKEN *symbol, DECL_MEMBER **decl_found, DECL_ID **decl_id);
+BOOLEAN find_member_symbol(TOKEN *symbol, DECL_MEMBER *decl_ptr, DECL_ID **decl_id);
+BOOLEAN find_list_symbol(TOKEN *symbol, DECL_MEMBER *decl_ptr, DECL_MEMBER **decl_found, DECL_ID **decl_id);
+BOOLEAN find_symbol(TOKEN *symbol, DECL_MEMBER **decl_found, DECL_ID **decl_id);
 #endif

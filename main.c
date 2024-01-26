@@ -130,7 +130,7 @@ char	*file_name;
 		tmp_line_ptr = line_ptr;
 		tmp_line_count = line_count;
 #ifdef MODERN
-		strcpy_s(tmp_file_name, strlen(current_file_name), current_file_name);
+		strcpy_s(tmp_file_name, 128, current_file_name);
 #else
 		(void) strcpy(tmp_file_name, current_file_name);
 #endif
@@ -138,7 +138,7 @@ char	*file_name;
 
 		/* Save file name */
 #ifdef MODERN
-	strcpy_s(current_file_name, strlen(file_name), file_name);
+	strcpy_s(current_file_name, 128, file_name);
 #else
 	(void) strcpy(current_file_name, file_name);
 #endif
@@ -198,7 +198,7 @@ char	*file_name;
 
 		/* Start with initial context using file name */
 #ifdef MODERN
-	strcpy_s(fname_token.token_name, strlen(file_name), file_name);
+	strcpy_s(fname_token.token_name, 512, file_name);
 #else
 	(void) strcpy(fname_token.token_name, file_name);
 #endif
@@ -273,7 +273,7 @@ char	*file_name;
 		line_ptr = tmp_line_ptr;
 		line_count = tmp_line_count;
 #ifdef MODERN
-		strcpy_s(current_file_name, strlen(tmp_file_name), tmp_file_name);
+		strcpy_s(current_file_name, 128, tmp_file_name);
 #else
 		(void) strcpy(current_file_name, tmp_file_name);
 #endif
@@ -312,13 +312,14 @@ char	*argv[];
 
 		/* Append a '.c' */
 #ifdef MODERN
-	strncpy_s(out_file_name, strlen(argv[1]), argv[1], i);
+	//strncpy(out_file_name, argv[1], i);
+	strncpy_s(out_file_name, 128, argv[1], i);
 #else
 	(void) strncpy(out_file_name, argv[1], i);
 #endif
 	out_file_name[i] = '\0';
 #ifdef MODERN
-	strcat_s(out_file_name, 2, ".c");
+	strcat_s(out_file_name, 128, ".c");
 #else
 	(void) strcat(out_file_name, ".c");
 #endif

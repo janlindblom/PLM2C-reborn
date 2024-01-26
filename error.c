@@ -7,6 +7,7 @@
 #include "tokens.h"
 #include "tkn_ext.h"
 #ifdef MODERN
+#include "token.h"
 #include "error.h"
 #endif
 
@@ -21,9 +22,13 @@ extern	char	current_file_name[];
  *	parse_mesg() -	Print given message, message type, and current
  *			line number.  Skip to error_eol.
  */
+#ifdef MODERN
+void parse_mesg(char *error_string, char *error_type, char error_eol)
+#else
 void parse_mesg(error_string, error_type, error_eol)
 char	*error_string, *error_type;
 char	error_eol;
+#endif
 {
 	char	*err_ptr;
 	int	i, offset;

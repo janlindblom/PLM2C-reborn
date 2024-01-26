@@ -6,6 +6,8 @@
 #include "cvt.h"
 #include "struct.h"
 #ifdef MODERN
+#include "mem.h"
+#include "token.h"
 #include "context.h"
 #endif
 
@@ -22,10 +24,14 @@ CONTEXT		*old_context;
  *	Search DECL_MEMBER list for symbol and if found, return TRUE
  *	and pointer to DECL_ID for that symbol.
  */
+#ifdef MODERN
+BOOLEAN find_member_symbol(TOKEN *symbol, DECL_MEMBER *decl_ptr, DECL_ID **decl_id)
+#else
 find_member_symbol(symbol, decl_ptr, decl_id)
 TOKEN		*symbol;
 DECL_MEMBER	*decl_ptr;
 DECL_ID		**decl_id;
+#endif
 {
 	DECL_ID	*var_ptr;
 
@@ -47,7 +53,7 @@ DECL_ID		**decl_id;
  *	If not found, return null pointer in decl_found, and return FALSE.
  */
 #ifdef MODERN
-int find_list_symbol(TOKEN *symbol, DECL_MEMBER **decl_ptr, DECL_MEMBER **decl_found, DECL_ID **decl_id)
+BOOLEAN find_list_symbol(TOKEN *symbol, DECL_MEMBER *decl_ptr, DECL_MEMBER **decl_found, DECL_ID **decl_id)
 #else
 find_list_symbol(symbol, decl_ptr, decl_found, decl_id)
 TOKEN		*symbol;
@@ -72,7 +78,7 @@ DECL_ID		**decl_id;
  *	and return FALSE.
  */
 #ifdef MODERN
-int find_symbol(TOKEN *symbol, DECL_MEMBER **decl_found, DECL_ID **decl_id)
+BOOLEAN find_symbol(TOKEN *symbol, DECL_MEMBER **decl_found, DECL_ID **decl_id)
 #else
 find_symbol(symbol, decl_found, decl_id)
 TOKEN		*symbol;

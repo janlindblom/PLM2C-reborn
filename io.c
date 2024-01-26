@@ -42,6 +42,7 @@ char	*string;
 int	length;
 #endif
 {
+	printf("%s\n", string);
 	if (length) {
 		if (out_string)
 			(void) strncat(out_string, string, length);

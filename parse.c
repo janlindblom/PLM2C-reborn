@@ -358,8 +358,8 @@ TOKEN	*token, *next_token;
 		}
 			/* Add .<identifier> to original token name */
 #ifdef MODERN
-		strcat_s(token->token_name, 1, ".");
-		strcat_s(token->token_name, strlen(next_token->token_name), next_token->token_name);
+		strcat_s(token->token_name, 512, ".");
+		strcat_s(token->token_name, 512, next_token->token_name);
 #else
 		(void) strcat(token->token_name, ".");
 		(void) strcat(token->token_name, next_token->token_name);
@@ -488,7 +488,7 @@ DECL_ID		*decl_id;
 
 			/* Find variable in list */
 #ifdef MODERN
-		if (!find_list_symbol(token, &decl->struct_list,
+		if (!find_list_symbol(token, decl->struct_list,
 					&var_decl, &var_decl_id))
 #else
 		if (!find_list_symbol(token, decl->struct_list,
@@ -756,7 +756,7 @@ TOKEN	*token;
 				token_class = get_token(token);
 				if (token_class == STRING)
 #ifdef MODERN
-					strcat_s(string_const, strlen(token->token_name), token->token_name);
+					strcat_s(string_const, 512, token->token_name);
 #else
 					(void) strcat(string_const, token->token_name);
 #endif
@@ -764,7 +764,7 @@ TOKEN	*token;
 				if (token_class == NUMERIC) {
 					cvt_octal(token, octal_const);
 #ifdef MODERN
-					strcat_s(string_const, strlen(octal_const), octal_const);
+					strcat_s(string_const, 512, octal_const);
 #else
 					(void) strcat(string_const, octal_const);
 #endif

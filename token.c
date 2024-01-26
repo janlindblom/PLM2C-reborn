@@ -163,7 +163,7 @@ TOKEN	*token;
 
 		/* Get a copy of identifier */
 #ifdef MODERN
-	strcpy_s(id, strlen(token->token_name), token->token_name);
+	strcpy_s(id, 512, token->token_name);
 #else
 	(void) strcpy(id, token->token_name);
 #endif
@@ -223,7 +223,7 @@ TOKEN	*token;
 
 				/* Switch to appropriate operator */
 #ifdef MODERN
-			strcpy_s(token->token_name, strlen(op_name), op_name);
+			strcpy_s(token->token_name, 512, op_name);
 #else
 			(void) strcpy(token->token_name, op_name);
 #endif
@@ -397,7 +397,7 @@ TOKEN	*token;
 				/* Found operator */
 				/* Save converted type */
 #ifdef MODERN
-			strcpy_s(token->token_name, strlen(op_ptr->cvt_operator), op_ptr->cvt_operator);
+			strcpy_s(token->token_name, 512, op_ptr->cvt_operator);
 #else
 			(void) strcpy(token->token_name, op_ptr->cvt_operator);
 #endif
@@ -497,7 +497,7 @@ TOKEN	*src, *dest;
 	dest->token_class = src->token_class;
 	dest->token_type = src->token_type;
 #ifdef MODERN
-	strcpy_s(dest->token_name, strlen(src->token_name), src->token_name);
+	strcpy_s(dest->token_name, 512, src->token_name);
 #else
 	(void) strcpy(dest->token_name, src->token_name);
 #endif
