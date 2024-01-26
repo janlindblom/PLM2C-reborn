@@ -8,6 +8,9 @@
 #include "tkn_ext.h"
 #ifdef MODERN
 #include "control.h"
+#include "io.h"
+#include "context.h"
+#include "error.h"
 #include "token.h"
 #endif
 
@@ -159,7 +162,11 @@ TOKEN	*token;
 	*token_name_ptr = '\0';
 
 		/* Get a copy of identifier */
+#ifdef MODERN
+	strcpy_s(id, strlen(token->token_name), token->token_name);
+#else
 	(void) strcpy(id, token->token_name);
+#endif
 		/* If lower-case, convert to upper case for comparison */
 	if (is_a_lc_char(*id)) {
 		for (id_ptr = id; *id_ptr; id_ptr++)
@@ -215,7 +222,11 @@ TOKEN	*token;
 	    		}
 
 				/* Switch to appropriate operator */
+#ifdef MODERN
+			strcpy_s(token->token_name, strlen(op_name), op_name);
+#else
 			(void) strcpy(token->token_name, op_name);
+#endif
 			token->token_class = OPERATOR;
 			return OPERATOR;
 		}
@@ -385,7 +396,11 @@ TOKEN	*token;
 			token->token_length)) {
 				/* Found operator */
 				/* Save converted type */
+#ifdef MODERN
+			strcpy_s(token->token_name, strlen(op_ptr->cvt_operator), op_ptr->cvt_operator);
+#else
 			(void) strcpy(token->token_name, op_ptr->cvt_operator);
+#endif
 			token->token_type = op_ptr->name;
 				/* Point past operator */
 			text_ptr += token->token_length - 1;

@@ -5,6 +5,12 @@
 #include "tokens.h"
 #ifdef MODERN
 #include <stdio.h>
+#include <string.h>
+
+#include "io.h"
+#include "token.h"
+#include "parse.h"
+#include "error.h"
 #include "decl_out.h"
 #endif
 
@@ -39,8 +45,12 @@ BOOLEAN	use_parens;
 /*
  *	Output array bound (if any)
  */
+#ifdef MODERN
+void out_bound(TOKEN *bound)
+#else
 out_bound(bound)
 TOKEN	*bound;
+#endif
 {
 	if (bound) {
 		out_char('[');
@@ -52,8 +62,12 @@ TOKEN	*bound;
 /*
  *	Output a declaration type.
  */
+#ifdef MODERN
+void out_decl_type(DECL_MEMBER *decl_ptr)
+#else
 out_decl_type(decl_ptr)
 DECL_MEMBER	*decl_ptr;
+#endif
 {
 	if (decl_ptr->type->token_type != STRUCTURE) {
 		out_type(decl_ptr->type->token_type);
@@ -65,8 +79,12 @@ DECL_MEMBER	*decl_ptr;
 /*
  *	Output structure contents.
  */
+#ifdef MODERN
+void out_struct(DECL_MEMBER *el_ptr)
+#else
 out_struct(el_ptr)
 DECL_MEMBER	*el_ptr;
+#endif
 {
 	DECL_ID		*var_ptr;
 
@@ -99,9 +117,13 @@ DECL_MEMBER	*el_ptr;
 /*
  *	Output C declaration list member.
  */
+#ifdef MODERN
+void out_decl_member(DECL_MEMBER *decl_list, TOKEN *decl_token)
+#else
 void out_decl_member(decl_list, decl_token)
 DECL_MEMBER	*decl_list;
 TOKEN		*decl_token;
+#endif
 {
 	int	i;
 	TOKEN	token, tmp_token;

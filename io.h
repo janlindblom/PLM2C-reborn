@@ -14,6 +14,7 @@ void out_pre_line(TOKEN *token);
 void out_pre_white(TOKEN *token);
 void out_str(char *string);
 void out_str_const(char *str_ptr, int len);
+void out_to_start();
 void out_token(TOKEN *token);
 void out_token_name(TOKEN *token);
 void out_type(int type);

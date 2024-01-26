@@ -48,6 +48,8 @@ typedef bool BOOLEAN;
 
 #ifndef MODERN
 char	*strcat(), *strncat(), *strcpy(), *strncpy();
+#else
+void cvt_file(char *file_name);
 #endif
 #ifdef IBMPC
 int	sprintf();

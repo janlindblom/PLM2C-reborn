@@ -1,15 +1,18 @@
-#ifdef WINDOWS
-#include <string.h>
-#endif
-#ifdef MODERN
-#include "control.h"
-#endif
+
 #include "misc.h"
 #include "defs.h"
 #include "cvt.h"
 #include "struct.h"
 #include "tokens.h"
 #include "tkn_ext.h"
+#ifdef MODERN
+#include <string.h>
+
+#include "token.h"
+#include "io.h"
+#include "error.h"
+#include "control.h"
+#endif
 
 extern	char	*text_buffer;
 extern	char	*text_ptr;
@@ -70,7 +73,11 @@ void parse_control()
 
 				/* Convert .plm to .c */
 			if (strcmp(include_ptr - 5, "plm")) {
+#ifdef MODERN
+				strcpy_s(include_ptr - 5, 2, ".c");
+#else
 				(void) strcpy(include_ptr - 5, ".c");
+#endif
 				include_ptr -= 2;
 			}
 

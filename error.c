@@ -102,8 +102,12 @@ char	*error_string;
 /*
  *	Do a parse_error(), but move to END_OF_LINE, not ';'
  */
+#ifdef MODERN
+void control_error(char *error_string)
+#else
 void control_error(error_string)
 char	*error_string;
+#endif
 {
 #ifdef IGNORE_CONTROL_ERRORS
 	parse_mesg("", "", LF);
