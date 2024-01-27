@@ -23,8 +23,8 @@ int parse_statement(TOKEN *first_token) {
     int token_type;
 
     /* Flush standard output and standard error */
-    fflush(stdout);
-    fflush(stderr);
+    //fflush(stdout);
+    //fflush(stderr);
 
     /* Flag no error yet */
     syntax_error = FALSE;
@@ -131,7 +131,7 @@ int parse_new_statement() {
 
     /* Get first token on line */
     get_token(&first_token);
-    fprintf(stderr, "Parsing statement...\n");
+    fprintf(stderr, "Parsing statement %s\n", first_token.token_name);
     return parse_statement(&first_token);
 }
 

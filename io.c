@@ -28,21 +28,18 @@ extern TOKEN   literal_token;
  *	Otherwise write string to stdout.
  */
 void out_data(char *string, int length) {
-    //fprintf(stderr, "string: %s, length: %d\n", string, length);
+    // fprintf(stderr, "string: %s, length: %d\n", string, length);
     if (length) {
-        if (out_string)
-#ifdef MODERN
-            strncat_s(out_string, strlen(out_string), string, length);
-#else
-            (void)strncat(out_string, string, length);
-#endif
-        else if (file_depth == 1)
+        if (out_string) {
+            strncat(out_string, string, length);
+            // strncat_s(out_string, sizeof(out_string) / sizeof(char), string, length);
+        } else if (file_depth == 1) {
 #ifdef DEBUG
             (void)fwrite(string, length, 1, stdout);
 #else
             (void)fwrite(string, length, 1, ofd);
 #endif
-        else {
+        } else {
             return;
         }
 
@@ -69,8 +66,7 @@ void out_white_space(TOKEN *token) {
  *	Print white space, if any.  If start of white space string is not
  *	white, prefix with a space.
  */
-void out_must_white(TOKEN *token)
-{
+void out_must_white(TOKEN *token) {
     if (!is_white(*(token->white_space_start))) {
         out_char(' ');
     }
@@ -81,8 +77,7 @@ void out_must_white(TOKEN *token)
  *	Print all white space up first new-line (if any).
  *	Move white_space_start to point past first new-line.
  */
-void out_pre_line(TOKEN *token)
-{
+void out_pre_line(TOKEN *token) {
     while ((token->white_space_start < token->white_space_end) && (*token->white_space_start != '\n')) {
         out_char(*token->white_space_start);
         token->white_space_start++;
@@ -93,8 +88,7 @@ void out_pre_line(TOKEN *token)
  *	Print all white space up to but not including last new-line.
  *	Move white_space_start to point to last new-line.
  */
-void out_pre_white(TOKEN *token)
-{
+void out_pre_white(TOKEN *token) {
     char *ptr;
     int   length;
 
@@ -112,7 +106,7 @@ void out_pre_white(TOKEN *token)
     if (length) {
         out_data(token->white_space_start, length);
     }
-    //fprintf(stderr, "ptr: %s, length: %d\n", ptr, length);
+    // fprintf(stderr, "ptr: %s, length: %d\n", ptr, length);
     token->white_space_start = ptr - 1;
     return;
 }
@@ -120,12 +114,7 @@ void out_pre_white(TOKEN *token)
 /*
  *	Output token name
  */
-#ifdef MODERN
-void out_token_name(TOKEN *token)
-#else
-void out_token_name(token) TOKEN *token;
-#endif
-{
+void out_token_name(TOKEN *token) {
     if (is_a_type(token)) {
         out_type(token->token_type);
     } else {
@@ -136,12 +125,7 @@ void out_token_name(token) TOKEN *token;
 /*
  *	Output white space and token name
  */
-#ifdef MODERN
-void out_token(TOKEN *token)
-#else
-void out_token(token) TOKEN *token;
-#endif
-{
+void out_token(TOKEN *token) {
     out_white_space(token);
     out_token_name(token);
 }
@@ -149,8 +133,7 @@ void out_token(token) TOKEN *token;
 /*
  *	Output guaranteed white space and token name
  */
-void out_must_token(token) TOKEN *token;
-{
+void out_must_token(TOKEN *token) {
     out_must_white(token);
     out_token_name(token);
 }
@@ -158,12 +141,7 @@ void out_must_token(token) TOKEN *token;
 /*
  *	Output case converted token name
  */
-#ifdef MODERN
-void out_cvt_name(TOKEN *token)
-#else
-void out_cvt_name(token) TOKEN *token;
-#endif
-{
+void out_cvt_name(TOKEN *token) {
     char *ptr;
 
     for (ptr = token->token_name; *ptr; ptr++) {
@@ -180,24 +158,14 @@ void out_cvt_name(token) TOKEN *token;
 /*
  *	Output string
  */
-#ifdef MODERN
-void out_str(char *string)
-#else
-void out_str(string) char *string;
-#endif
-{
+void out_str(char *string) {
     out_data(string, strlen(string));
 }
 
 /*
  *	Output character
  */
-#ifdef MODERN
-void out_char(char ch)
-#else
-void out_char(ch) char ch;
-#endif
-{
+void out_char(char ch) {
     out_data(&ch, 1);
 }
 
@@ -213,12 +181,7 @@ void out_to_start() {
 /*
  *	Output type
  */
-#ifdef MODERN
-void out_type(int type)
-#else
-void out_type(type) int type;
-#endif
-{
+void out_type(int type) {
     switch (type) {
         case BYTE:
 #ifdef CONVERT_TYPES
@@ -283,13 +246,7 @@ void out_init() {
  *		'W' << 24 | 'X' << 16 | 'Y' << 8 | Z
  *	where len specifies the number of bytes in the string to output.
  */
-#ifdef MODERN
-void out_str_const(char *str_ptr, int len)
-#else
-void out_str_const(str_ptr, len) char *str_ptr;
-int  len;
-#endif
-{
+void out_str_const(char *str_ptr, int len) {
     while (len-- && *str_ptr) {
         out_char('\'');
         if (*str_ptr == '\'') {
@@ -311,13 +268,7 @@ int  len;
 /*
  *	Convert NUMERIC constant to octal constant
  */
-#ifdef MODERN
-void cvt_octal(TOKEN *token, char *octal_string)
-#else
-void cvt_octal(token, octal_string) TOKEN *token;
-char octal_string[];
-#endif
-{
+void cvt_octal(TOKEN *token, char *octal_string) {
     int  octal;
     char ch, *ptr;
 
@@ -343,9 +294,7 @@ char octal_string[];
                 return;
             }
         }
-    } else
-
-        if ((ch == 'O') || (ch == 'Q')) {
+    } else if ((ch == 'O') || (ch == 'Q')) {
         /* Octal constant */
         for (ptr = token->token_name + 1; *ptr; ptr++) {
             octal *= 8;

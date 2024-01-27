@@ -1,4 +1,4 @@
 CompileFlags:
-  Add: [-Wincompatible-pointer-types, -Wimplicit-function-declaration, -Wimplicit-int, -DMODERN]
+  Add: [-Wincompatible-pointer-types, -Wimplicit-function-declaration, -Wimplicit-int, -DMODERN, -DDEBUG]
   Remove: []
   Compiler: gcc

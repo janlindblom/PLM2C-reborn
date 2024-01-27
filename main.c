@@ -112,7 +112,8 @@ void cvt_file(char *file_name) {
         tmp_line_ptr    = line_ptr;
         tmp_line_count  = line_count;
 #ifdef MODERN
-        strcpy_s(tmp_file_name, sizeof(tmp_file_name) / sizeof(tmp_file_name[0]), current_file_name);
+        strcpy(tmp_file_name, current_file_name);
+        //strcpy_s(tmp_file_name, sizeof(tmp_file_name) / sizeof(char), current_file_name);
 #else
         (void)strcpy(tmp_file_name, current_file_name);
 #endif
@@ -120,7 +121,8 @@ void cvt_file(char *file_name) {
 
     /* Save file name */
 #ifdef MODERN
-    strcpy_s(current_file_name, sizeof(current_file_name) / sizeof(current_file_name[0]), file_name);
+    //strcpy_s(current_file_name, sizeof(current_file_name) / sizeof(char), file_name);
+    strcpy(current_file_name, file_name);
 #else
     (void)strcpy(current_file_name, file_name);
 #endif
@@ -156,9 +158,9 @@ void cvt_file(char *file_name) {
     /* Read file */
 
     fprintf(stderr, "Reading %ld bytes from %s\n", file_stat.st_size, file_name);
-    //fseek(fd, 0, SEEK_SET);
+
 #ifdef MODERN
-    if ((nr = fread(text_buffer, (int)file_stat.st_size, 1, fd)) == -1)
+    if (fread(text_buffer, (int)file_stat.st_size, 1, fd) == -1)
 #else
     if ((nr = read(fd, text_buffer, (int)file_stat.st_size)) == -1)
 #endif
@@ -186,7 +188,7 @@ void cvt_file(char *file_name) {
 
     /* Start with initial context using file name */
 #ifdef MODERN
-    strcpy_s(fname_token.token_name, MAX_TOKEN_LENGTH, file_name);
+    strcpy_s(fname_token.token_name, sizeof(fname_token.token_name) / sizeof(char), file_name);
 #else
     (void)strcpy(fname_token.token_name, file_name);
 #endif
@@ -272,13 +274,7 @@ void cvt_file(char *file_name) {
 /*
  *	Open file and init options
  */
-#ifdef MODERN
 int main(int argc, char *argv[])
-#else
-int   main(argc, argv)
-int   argc;
-char *argv[];
-#endif
 {
     int  i;
     char ch;
@@ -303,17 +299,17 @@ char *argv[];
     /* Append a '.c' */
 #ifdef MODERN
     // strncpy(out_file_name, argv[1], i);
-    strncpy_s(out_file_name, sizeof(out_file_name) / sizeof(out_file_name[0]), argv[1], i);
+    strncpy_s(out_file_name, sizeof(out_file_name) / sizeof(char), argv[1], i);
 #else
     (void)strncpy(out_file_name, argv[1], i);
 #endif
     out_file_name[i] = '\0';
 #ifdef MODERN
-    strcat_s(out_file_name, 128, ".c");
+    strcat_s(out_file_name, sizeof(out_file_name) / sizeof(char), ".c");
 #else
     (void)strcat(out_file_name, ".c");
 #endif
-    (void)printf("Output to: %s\n", out_file_name);
+    printf("Output to: %s\n", out_file_name);
 
     /* Get AT declaration list */
     get_at_decl();
