@@ -1,4 +1,3 @@
-#ifdef MODERN
 #include "defs.h"
 #include "misc.h"
 #include "struct.h"
@@ -16,4 +15,3 @@ void get_element_ptr(DECL_MEMBER **element);
 void get_param_ptr(PARAM_LIST **param);
 void get_token_ptr(TOKEN **token);
 void get_var_ptr(DECL_ID **var);
-#endif

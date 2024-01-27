@@ -1,19 +1,12 @@
 #include <stdio.h>
-#ifdef IBMPC
-#include <stdlib.h>
-#endif
-#ifdef WINDOWS
-#include <string.h>
-#endif
 #include "misc.h"
 #include "defs.h"
 #include "cvt.h"
 #include "struct.h"
 #include "cvt_id.h"
 #include "tokens.h"
-#ifdef MODERN
+#include <string.h>
 #include <stdlib.h>
-
 #include "mem.h"
 #include "token.h"
 #include "io.h"
@@ -23,22 +16,34 @@
 #include "context.h"
 #include "decl_out.h"
 #include "parse.h"
-#endif
 
 extern	char	*text_buffer, *text_ptr;
 extern	int	line_count;
 extern	char	*out_string;
 
 /*
+ *	PL/M Cast function equivalents
+ */
+CVT_ID cast_functions[] = {
+	"float",	TYPE_REAL,
+	"real",		TYPE_REAL,
+	"fix",		TYPE_INTEGER,
+	"int",		TYPE_INTEGER,
+	"signed",	TYPE_INTEGER,
+	"integer",	TYPE_INTEGER,
+	"unsign",	TYPE_WORD,
+	"word",		TYPE_WORD,
+	"byte",		TYPE_BYTE,
+	"dword",	TYPE_DWORD,
+	"pointer",	TYPE_POINTER,
+	"",		""
+};
+
+/*
  *	Parse a procedure parameter list.
  *	Return head of linked list of parameters.
  */
-#ifdef MODERN
 void get_param_list(PARAM_LIST **param_head)
-#else
-void get_param_list(param_head)
-PARAM_LIST	**param_head;
-#endif
 {
 	PARAM_LIST	*list_ptr, *param_ptr;
 	int		token_class;
@@ -971,7 +976,7 @@ TOKEN	*first_token;
 				temp_out_string1 = out_string;
 				case_output[0] = '\0';
 				out_string = case_output;
-	
+
 				(void) sprintf(case_statement, "case %d :",
 					case_line++);
 				token_class = parse_new_statement();

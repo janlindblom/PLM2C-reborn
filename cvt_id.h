@@ -1,20 +1,6 @@
-/*
- *	PL/M Cast function equivalents
- */
-CVT_ID cast_functions[] = {
-	"float",	TYPE_REAL,
-	"real",		TYPE_REAL,
-	"fix",		TYPE_INTEGER,
-	"int",		TYPE_INTEGER,
-	"signed",	TYPE_INTEGER,
-	"integer",	TYPE_INTEGER,
-	"unsign",	TYPE_WORD,
-	"word",		TYPE_WORD,
-	"byte",		TYPE_BYTE,
-	"dword",	TYPE_DWORD,
-	"pointer",	TYPE_POINTER,
-	"",		""
-};
+#include "defs.h"
+#include "cvt.h"
+#include "struct.h"
 
 /*
  *	PL/M function equivalents

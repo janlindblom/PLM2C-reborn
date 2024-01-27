@@ -1,15 +1,16 @@
+#include "struct.h"
 
 /*
  *	Reserved word list
  */
-extern	RESERVED_WORD reserved_words[];
+extern RESERVED_WORD reserved_words[];
 
 /*
  *	Operator list
  */
-extern	RESERVED_OPERATOR reserved_operators[];
+extern RESERVED_OPERATOR reserved_operators[];
 
 /*
  *	Control directives list
  */
-extern	RESERVED_WORD control_directives[];
+extern RESERVED_WORD control_directives[];

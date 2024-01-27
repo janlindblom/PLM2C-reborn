@@ -1,4 +1,3 @@
-#ifdef MODERN
 #include "defs.h"
 #include "misc.h"
 #include "struct.h"
@@ -19,4 +18,3 @@ void out_token(TOKEN *token);
 void out_token_name(TOKEN *token);
 void out_type(int type);
 void out_white_space(TOKEN *token);
-#endif

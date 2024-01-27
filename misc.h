@@ -1,35 +1,31 @@
+#include <stdbool.h>
+#include <stdint.h>
+#include "tokens.h"
 /*
  *	Miscellaneous defines
  */
-#ifndef MODERN
-typedef	unsigned char	BYTE;
-typedef	unsigned char	BOOLEAN;
-#else
-#include <stdbool.h>
-#include <stdint.h>
 
-typedef bool BOOLEAN;
-#endif
+typedef unsigned char BOOLEAN;
 
 #ifndef TRUE
-#define TRUE	1
+#    define TRUE 1
 #endif
 
 #ifndef FALSE
-#define FALSE	0
+#    define FALSE 0
 #endif
 
 #ifndef NULL
-#define NULL	0
+#    define NULL 0
 #endif
 
 /*
  *	White space characters
  */
-#define	SPACE	' '
-#define TAB	9
-#define CR	13
-#define LF	10
+#define SPACE ' '
+#define TAB 9
+#define CR 13
+#define LF 10
 
 /*
  *	Useful defines
@@ -39,18 +35,10 @@ typedef bool BOOLEAN;
 #define is_a_char(char) (((char & 0x5F) >= 'A') && ((char & 0x5F) <= 'Z'))
 #define is_a_digit(char) ((char >= '0') && (char <= '9'))
 
-#define is_a_type(token) ((token->token_class == RESERVED) && \
-		(token->token_type >= BYTE) && (token->token_type <= REAL))
+#define is_a_type(token) ((token->token_class == RESERVED) && (token->token_type >= BYTE) && (token->token_type <= REAL))
 
 #define is_white(ch) ((ch == ' ') || (ch == TAB))
 
-#define NONE	0
+#define NONE 0
 
-#ifndef MODERN
-char	*strcat(), *strncat(), *strcpy(), *strncpy();
-#else
 void cvt_file(char *file_name);
-#endif
-#ifdef IBMPC
-int	sprintf();
-#endif

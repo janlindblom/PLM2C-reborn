@@ -1,3 +1,6 @@
+#include "struct.h"
+#include "tokens.h"
+
 /*
  *	Reserved word list
  */

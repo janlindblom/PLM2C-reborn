@@ -1,0 +1,27 @@
+# auto for anything unspecified
+* text=auto
+
+# sources
+*.c      text eol=lf
+*.h      text eol=lf
+*.bat    text eol=crlf
+*.cmd    text eol=crlf
+
+Makefile eol=lf
+*.mk     eol=lf
+
+# documentation
+*.md         text eol=lf
+*.txt        text eol=lf
+AUTHORS      text eol=lf
+CHANGELOG    text eol=lf
+CHANGES      text eol=lf
+CONTRIBUTING text eol=lf
+COPYING      text eol=lf
+INSTALL      text eol=lf
+license      text eol=lf
+LICENSE      text eol=lf
+NEWS         text eol=lf
+readme       text eol=lf
+*README*     text eol=lf
+TODO         text eol=lf

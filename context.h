@@ -1,4 +1,3 @@
-#ifdef MODERN
 #include "defs.h"
 #include "misc.h"
 #include "struct.h"
@@ -12,4 +11,3 @@ void pop_context();
 BOOLEAN find_member_symbol(TOKEN *symbol, DECL_MEMBER *decl_ptr, DECL_ID **decl_id);
 BOOLEAN find_list_symbol(TOKEN *symbol, DECL_MEMBER *decl_ptr, DECL_MEMBER **decl_found, DECL_ID **decl_id);
 BOOLEAN find_symbol(TOKEN *symbol, DECL_MEMBER **decl_found, DECL_ID **decl_id);
-#endif
