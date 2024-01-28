@@ -90,12 +90,9 @@ void get_at_decl() {
  *	Open specified file, init options, and parse.
  */
 void cvt_file(char *file_name) {
-#ifdef MODERN
     int   nr;
     FILE *fd;
-#else
-    int fd, nr;
-#endif
+
     struct stat file_stat;
     TOKEN       token, fname_token, token_module, token_do;
     int         token_class;
@@ -111,31 +108,15 @@ void cvt_file(char *file_name) {
         tmp_text_ptr    = text_ptr;
         tmp_line_ptr    = line_ptr;
         tmp_line_count  = line_count;
-#ifdef MODERN
-        strcpy(tmp_file_name, current_file_name);
-        //strcpy_s(tmp_file_name, sizeof(tmp_file_name) / sizeof(char), current_file_name);
-#else
-        (void)strcpy(tmp_file_name, current_file_name);
-#endif
+        strcpy_s(tmp_file_name, sizeof(tmp_file_name), current_file_name);
     }
 
     /* Save file name */
-#ifdef MODERN
-    //strcpy_s(current_file_name, sizeof(current_file_name) / sizeof(char), file_name);
-    strcpy(current_file_name, file_name);
-#else
-    (void)strcpy(current_file_name, file_name);
-#endif
+    strcpy_s(current_file_name, sizeof(current_file_name), file_name);
 
     /* Open file */
-#ifdef MODERN
-    if ((fd = fopen(file_name, "r")) == NULL)
-    //if (fopen_s(&fd, file_name, O_RDONLY) == -1)
-#else
-    if ((fd = open(file_name, O_RDONLY)) == -1)
-#endif
-    {
-        fprintf(stderr, "Cannot open input file %s", file_name);
+    if ((fopen_s(&fd, file_name, "r")) != 0) {
+        fprintf(stderr, "Cannot open input file %s: ", file_name);
         perror("");
         exit(1);
     }
@@ -159,24 +140,15 @@ void cvt_file(char *file_name) {
 
     fprintf(stderr, "Reading %ld bytes from %s\n", file_stat.st_size, file_name);
 
-#ifdef MODERN
-    if (fread(text_buffer, (int)file_stat.st_size, 1, fd) == -1)
-#else
-    if ((nr = read(fd, text_buffer, (int)file_stat.st_size)) == -1)
-#endif
-    {
+    nr = fread(text_buffer, 1, (int)file_stat.st_size, fd);
+    if (nr == -1) {
         perror("Cannot read input file");
         exit(1);
     }
-    //fprintf(stderr, "Read file: %s\n", text_buffer);
 
     /* Insert End-of-file Mark */
-    text_buffer[file_stat.st_size] = '\0';
-#ifdef MODERN
+    text_buffer[nr] = '\0';
     fclose(fd);
-#else
-    (void)close(fd);
-#endif
 
     /* Init pointers */
     text_ptr   = text_buffer;
@@ -187,31 +159,28 @@ void cvt_file(char *file_name) {
     out_init();
 
     /* Start with initial context using file name */
-#ifdef MODERN
-    strcpy_s(fname_token.token_name, sizeof(fname_token.token_name) / sizeof(char), file_name);
-#else
-    (void)strcpy(fname_token.token_name, file_name);
-#endif
+    strcpy_s(fname_token.token_name, sizeof(fname_token.token_name), file_name);
     fname_token.token_class = IDENTIFIER;
     new_context(MODULE, &fname_token);
 
     /* Is this the first file? */
     if (file_depth++ == 0) {
-        /* Yes - open output file */
-#ifdef MODERN
+/* Yes - open output file */
+#ifndef DEBUG
+#    ifdef MODERN
         if (fopen_s(&ofd, out_file_name, "w") == -1)
-#else
+#    else
         if ((ofd = fopen(out_file_name, "w")) == NULL)
-#endif
+#    endif
         {
             (void)fprintf(stderr, "Cannot create output file %s", out_file_name);
             exit(1);
         }
+#endif
 
         /* Check for module name */
         token_class = get_token(&token_module);
         out_pre_white(&token_module);
-        //fprintf(stderr, "Token class: %d\n", token_class);
 
         tmp_ptr = token_module.token_start;
         if ((token_class == IDENTIFIER) &&
@@ -262,7 +231,7 @@ void cvt_file(char *file_name) {
         line_ptr    = tmp_line_ptr;
         line_count  = tmp_line_count;
 #ifdef MODERN
-        strcpy_s(current_file_name, sizeof(current_file_name) / sizeof(current_file_name[0]), tmp_file_name);
+        strcpy_s(current_file_name, sizeof(current_file_name), tmp_file_name);
 #else
         (void)strcpy(current_file_name, tmp_file_name);
 #endif
@@ -274,8 +243,7 @@ void cvt_file(char *file_name) {
 /*
  *	Open file and init options
  */
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     int  i;
     char ch;
 
@@ -298,18 +266,17 @@ int main(int argc, char *argv[])
 
     /* Append a '.c' */
 #ifdef MODERN
-    // strncpy(out_file_name, argv[1], i);
-    strncpy_s(out_file_name, sizeof(out_file_name) / sizeof(char), argv[1], i);
+    strncpy_s(out_file_name, sizeof(out_file_name), argv[1], i);
 #else
     (void)strncpy(out_file_name, argv[1], i);
 #endif
     out_file_name[i] = '\0';
 #ifdef MODERN
-    strcat_s(out_file_name, sizeof(out_file_name) / sizeof(char), ".c");
+    strcat_s(out_file_name, sizeof(out_file_name), ".c");
 #else
     (void)strcat(out_file_name, ".c");
 #endif
-    printf("Output to: %s\n", out_file_name);
+    fprintf(stderr, "Output to: %s\n", out_file_name);
 
     /* Get AT declaration list */
     get_at_decl();

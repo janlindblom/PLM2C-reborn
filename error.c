@@ -1,88 +1,80 @@
 #include <stdio.h>
-#include <string.h>
 #include "misc.h"
 #include "defs.h"
 #include "cvt.h"
 #include "struct.h"
 #include "tokens.h"
 #include "tkn_ext.h"
-#ifdef MODERN
 #include "token.h"
 #include "error.h"
-#endif
 
-extern	BOOLEAN	syntax_error;
+extern BOOLEAN syntax_error;
 
-extern	char	*text_ptr;
-extern	int	line_count;
-extern	char	*line_ptr;
-extern	char	current_file_name[];
+extern char *text_ptr;
+extern int   line_count;
+extern char *line_ptr;
+extern char  current_file_name[];
 
 /*
  *	parse_mesg() -	Print given message, message type, and current
  *			line number.  Skip to error_eol.
  */
-#ifdef MODERN
-void parse_mesg(char *error_string, char *error_type, char error_eol)
-#else
-void parse_mesg(error_string, error_type, error_eol)
-char	*error_string, *error_type;
-char	error_eol;
-#endif
-{
-	char	*err_ptr;
-	int	i, offset;
-	TOKEN	token;
+void parse_mesg(char *error_string, char *error_type, char error_eol) {
+    char *err_ptr;
+    int   i, offset;
+    TOKEN token;
 
-	syntax_error = TRUE;
+    syntax_error = TRUE;
 
-	offset = text_ptr - line_ptr - 1;
+    offset = text_ptr - line_ptr - 1;
 
-		/* Find end of line */
-	for (err_ptr = line_ptr; (*err_ptr != '\0') &&
-				 (*err_ptr != LF); err_ptr++) ;
+    /* Find end of line */
+    for (err_ptr = line_ptr; (*err_ptr != '\0') && (*err_ptr != LF); err_ptr++)
+        ;
 
-	if (*error_string) {
-		(void) fprintf(stderr, "\n%s - Parse %s: %s.\nOccurred at line %d near:\n",
-			current_file_name, error_type, error_string, line_count);
+    if (*error_string) {
+        (void)fprintf(stderr, "\n%s - Parse %s: %s.\nOccurred at line %d near:\n", current_file_name, error_type, error_string, line_count);
 
-			/* Print offending line */
-		(void) fwrite(line_ptr, err_ptr - line_ptr + 1, 1, stderr);
+        /* Print offending line */
+        (void)fwrite(line_ptr, err_ptr - line_ptr + 1, 1, stderr);
 
-		for (i = 0; i < offset; i++)
-			if (line_ptr[i] < ' ')
-				(void) fputc(line_ptr[i], stderr);
-			else
-				(void) fputc(' ', stderr);
-		(void) fputc('^', stderr);
+        for (i = 0; i < offset; i++) {
+            if (line_ptr[i] < ' ') {
+                (void)fputc(line_ptr[i], stderr);
+            } else {
+                (void)fputc(' ', stderr);
+            }
+        }
+        (void)fputc('^', stderr);
 
-		if (*err_ptr == '\0')
-			(void) fputc(LF, stderr);
-	}
+        if (*err_ptr == '\0') {
+            (void)fputc(LF, stderr);
+        }
+    }
 
-	if (*err_ptr != '\0')
-		err_ptr++;
+    if (*err_ptr != '\0') {
+        err_ptr++;
+    }
 
-		/* Skip to end-of-line */
-	if (error_eol == '\0')
-		return;
-	else
+    /* Skip to end-of-line */
+    if (error_eol == '\0') {
+        return;
+    } else
 
-	if (error_eol == LF) {
-		text_ptr = err_ptr;
-		line_ptr = err_ptr;
-		line_count++;
-	} else {
+        if (error_eol == LF) {
+        text_ptr = err_ptr;
+        line_ptr = err_ptr;
+        line_count++;
+    } else {
+        if (*(text_ptr - 1) != ';') {
+            do {
+                i = get_token(&token);
+            } while ((i != END_OF_FILE) && (i != END_OF_LINE));
+        }
 
-		if (*(text_ptr - 1) != ';') {
-			do {
-				i = get_token(&token);
-			} while ((i != END_OF_FILE) && (i != END_OF_LINE));
-		}
-
-			/* Point at end of line */
-		text_ptr--;
-	}
+        /* Point at end of line */
+        text_ptr--;
+    }
 }
 
 /*
@@ -90,47 +82,29 @@ char	error_eol;
  *			Called when an unrecognised or unprocessable token
  *			appears.
  */
-#ifdef MODERN
-void parse_error(char *error_string)
-#else
-void parse_error(error_string)
-char	*error_string;
-#endif
-{
-	if (syntax_error)
-			/* Already had an error on this line */
-		return;
+void parse_error(char *error_string) {
+    if (syntax_error) {
+        /* Already had an error on this line */
+        return;
+    }
 
-	parse_mesg(error_string, "error", END_OF_LINE);
+    parse_mesg(error_string, "error", END_OF_LINE);
 }
 
 /*
  *	Do a parse_error(), but move to END_OF_LINE, not ';'
  */
-#ifdef MODERN
-void control_error(char *error_string)
-#else
-void control_error(error_string)
-char	*error_string;
-#endif
-{
+void control_error(char *error_string) {
 #ifdef IGNORE_CONTROL_ERRORS
-	parse_mesg("", "", LF);
+    parse_mesg("", "", LF);
 #else
-	parse_mesg(error_string, "error", LF);
+    parse_mesg(error_string, "error", LF);
 #endif
 }
 
 /*
  *	parse_warning - Generate a warning message
  */
-#ifdef MODERN
-void parse_warning(char *warning_string)
-#else
-void parse_warning(warning_string)
-char	*warning_string;
-#endif
-{
-	parse_mesg(warning_string, "warning", '\0');
+void parse_warning(char *warning_string) {
+    parse_mesg(warning_string, "warning", '\0');
 }
-

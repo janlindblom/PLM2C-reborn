@@ -5,14 +5,14 @@
  *	Miscellaneous defines
  */
 
-typedef unsigned char BOOLEAN;
+typedef bool BOOLEAN;
 
 #ifndef TRUE
-#    define TRUE 1
+#    define TRUE true
 #endif
 
 #ifndef FALSE
-#    define FALSE 0
+#    define FALSE false
 #endif
 
 #ifndef NULL
