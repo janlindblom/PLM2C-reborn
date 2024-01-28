@@ -4,7 +4,7 @@
 /*
  *	Reserved word list
  */
-RESERVED_WORD reserved_words[] = {
+const RESERVED_WORD reserved_words[] = {
 
 		/* Statements */
 	"DECLARE",	DECLARE,
@@ -72,7 +72,7 @@ RESERVED_WORD reserved_words[] = {
 /*
  *	Operator list
  */
-RESERVED_OPERATOR reserved_operators[] = {
+const RESERVED_OPERATOR reserved_operators[] = {
 	"+",	"+",	PLUS,
 	"-",	"-",	MINUS,
 	"*",	"*",	TIMES,
@@ -91,7 +91,7 @@ RESERVED_OPERATOR reserved_operators[] = {
 /*
  *	Control directives list
  */
-RESERVED_WORD control_directives[] = {
+const RESERVED_WORD control_directives[] = {
 #ifdef	USE_ALL_CONTROLS
 	"CODE",		C_CODE,
 	"CO",		C_CODE,

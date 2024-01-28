@@ -48,7 +48,6 @@ int get_token(TOKEN *token) {
 
     /* Check for white space */
     while ((token_ch == SPACE) || (token_ch == TAB) || (token_ch == CR) || (token_ch == LF) || (token_ch == '$') || ((token_ch == '/') && (*text_ptr == '*'))) {
-
         if (token_ch == '$') {
             /* Check for a control directive */
             if ((text_ptr - 1 == text_buffer) || (*(text_ptr - 2) == '\n')) {
@@ -143,11 +142,7 @@ int get_token(TOKEN *token) {
         *token_name_ptr     = '\0';
 
         /* Get a copy of identifier */
-#ifdef MODERN
-        strcpy_s(id, 512, token->token_name);
-#else
-        (void)strcpy(id, token->token_name);
-#endif
+        strcpy_s(id, sizeof(id), token->token_name);
         /* If lower-case, convert to upper case for comparison */
         if (is_a_lc_char(*id)) {
             for (id_ptr = id; *id_ptr; id_ptr++) {
@@ -201,11 +196,7 @@ int get_token(TOKEN *token) {
                 }
 
                     /* Switch to appropriate operator */
-#ifdef MODERN
-                strcpy_s(token->token_name, 512, op_name);
-#else
-                (void)strcpy(token->token_name, op_name);
-#endif
+                strcpy_s(token->token_name, sizeof(token->token_name), op_name);
                 token->token_class = OPERATOR;
                 return OPERATOR;
             }
@@ -366,11 +357,11 @@ int get_token(TOKEN *token) {
     } else {
         /* Check for operator */
         for (op_ptr = &reserved_operators[0]; op_ptr->name != END_OF_FILE; op_ptr++) {
-            token->token_length = strlen(op_ptr->operator);
-            if (!strncmp(text_ptr - 1, op_ptr->operator, token->token_length)) {
+            token->token_length = strlen(op_ptr->oper);
+            if (!strncmp(text_ptr - 1, op_ptr->oper, token->token_length)) {
                 /* Found operator */
                 /* Save converted type */
-                (void)strcpy(token->token_name, op_ptr->cvt_operator);
+                strcpy_s(token->token_name, sizeof(token->token_name), op_ptr->cvt_oper);
                 token->token_type = op_ptr->name;
                 /* Point past operator */
                 text_ptr += token->token_length - 1;
@@ -459,11 +450,7 @@ int get_token(TOKEN *token) {
 void token_copy(TOKEN *src, TOKEN *dest) {
     dest->token_class = src->token_class;
     dest->token_type  = src->token_type;
-#ifdef MODERN
-    strcpy_s(dest->token_name, sizeof(dest->token_name) / sizeof(char), src->token_name);
-#else
-    (void)strcpy(dest->token_name, src->token_name);
-#endif
+    strcpy_s(dest->token_name, sizeof(dest->token_name), src->token_name);
     dest->token_start       = src->token_start;
     dest->token_length      = src->token_length;
     dest->white_space_start = src->white_space_start;

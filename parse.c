@@ -1,12 +1,12 @@
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include "misc.h"
 #include "defs.h"
 #include "cvt.h"
 #include "struct.h"
 #include "cvt_id.h"
 #include "tokens.h"
-#include <string.h>
-#include <stdlib.h>
 #include "mem.h"
 #include "token.h"
 #include "io.h"
@@ -25,6 +25,7 @@ extern char *out_string;
  *	PL/M Cast function equivalents
  */
  CVT_ID cast_functions[] = {
+    // clang-format off
 	"float",	TYPE_REAL,
 	"real",		TYPE_REAL,
 	"fix",		TYPE_INTEGER,
@@ -37,6 +38,33 @@ extern char *out_string;
 	"dword",	TYPE_DWORD,
 	"pointer",	TYPE_POINTER,
 	"",		""
+    //clang-format on
+};
+
+/*
+ *	PL/M function equivalents
+ */
+CVT_ID cvt_functions[] = {
+    // clang-format off
+	"size",			"sizeof",
+	"abs",			"fabs",
+	"iabs",			"abs",
+	"input",		"inportb",
+	"inword",		"inport",
+	"setinterrupt",		"signal",
+	"initrealmathunit",	"_fpreset",
+	"",		""
+    // clang-format on
+};
+
+/*
+ *	PL/M identifier equivalents
+ */
+CVT_ID cvt_identifiers[] = {
+    // clang-format off
+	"getrealerror",		"_status87()",
+	"",			""
+    // clang-format on
 };
 
 /*

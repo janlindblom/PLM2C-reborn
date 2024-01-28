@@ -45,7 +45,7 @@ CC = gcc
 TOKEN_HDRS = misc.h defs.h struct.h cvt.h cvt_id.h tokens.h
 HDRS =	$(TOKEN_HDRS) tkn_defs.h tkn_ext.h
 
-CFLAGS = -c -O
+CFLAGS = -c -O -DDEBUG
 
 plm2c.exe:	$(OBJS)
 	$(CC) -o plm2c.exe $(OBJS)

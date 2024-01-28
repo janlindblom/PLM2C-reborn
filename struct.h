@@ -111,23 +111,23 @@ typedef struct CONTEXT {
 /*
  *	Format of a PL/M identifier equivalent
  */
-typedef struct {
+typedef struct CVT_ID {
     char *id_name, *new_id;
 } CVT_ID;
 
 /*
  *	Format of a PL/M reserved word
  */
-typedef struct {
-    char *name;
+typedef struct RESERVED_WORD {
+    const char *name;
     int   token;
 } RESERVED_WORD;
 
 /*
  *	Format of a PL/M reserved operator
  */
-typedef struct {
-    char *operator;
-    char *cvt_operator;
+typedef struct RESERVED_OPERATOR {
+    const char *oper;
+    const char *cvt_oper;
     int   name;
 } RESERVED_OPERATOR;
