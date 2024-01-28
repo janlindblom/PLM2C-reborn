@@ -28,11 +28,9 @@ extern TOKEN   literal_token;
  *	Otherwise write string to stdout.
  */
 void out_data(char *string, int length) {
-    // fprintf(stderr, "string: %s, length: %d\n", string, length);
     if (length) {
         if (out_string) {
             strncat(out_string, string, length);
-            // strncat_s(out_string, sizeof(out_string) / sizeof(char), string, length);
         } else if (file_depth == 1) {
 #ifdef DEBUG
             (void)fwrite(string, length, 1, stdout);
@@ -106,7 +104,6 @@ void out_pre_white(TOKEN *token) {
     if (length) {
         out_data(token->white_space_start, length);
     }
-    // fprintf(stderr, "ptr: %s, length: %d\n", ptr, length);
     token->white_space_start = ptr - 1;
     return;
 }

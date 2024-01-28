@@ -103,7 +103,6 @@ void add_decl_to_context(DECL *decl) {
  *	Push a new context of specified type and name
  */
 void new_context(int type, TOKEN *name) {
-    //fprintf(stderr, "new_context: %s\n", name ? name->token_name : "NULL");
     CONTEXT *new_context;
 
     get_context_ptr(&new_context);

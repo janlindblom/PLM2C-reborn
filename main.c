@@ -122,12 +122,7 @@ void cvt_file(char *file_name) {
     }
 
     /* Get length */
-#ifdef MODERN
-    if (stat(file_name, &file_stat))
-#else
-    if (fstat(fd, &file_stat))
-#endif
-    {
+    if (stat(file_name, &file_stat)) {
         perror("Cannot stat input file");
         exit(1);
     }

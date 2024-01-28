@@ -48,7 +48,6 @@ int get_token(TOKEN *token) {
 
     /* Check for white space */
     while ((token_ch == SPACE) || (token_ch == TAB) || (token_ch == CR) || (token_ch == LF) || (token_ch == '$') || ((token_ch == '/') && (*text_ptr == '*'))) {
-        // fprintf(stderr, "token_ch = %d\n", token_ch);
 
         if (token_ch == '$') {
             /* Check for a control directive */
@@ -100,7 +99,6 @@ int get_token(TOKEN *token) {
     token_name_ptr = token->token_name;
 
     if (is_a_char(token_ch)) {
-        // fprintf(stderr, "is_a_char\n");
         /* Process identifier */
 #ifdef CONVERT_CASE
         /* Convert identifiers starting with an   */
@@ -264,7 +262,6 @@ int get_token(TOKEN *token) {
 
         return IDENTIFIER;
     } else if (is_a_digit(token_ch)) {
-        // fprintf(stderr, "is_a_digit\n");
         /* Process number */
         /* Flag not a floating point number */
         got_fraction = FALSE;
@@ -367,7 +364,6 @@ int get_token(TOKEN *token) {
         token->token_class = token->token_type = NUMERIC;
         return NUMERIC;
     } else {
-        // fprintf(stderr, "!is_a_char && !is_a_digit\n");
         /* Check for operator */
         for (op_ptr = &reserved_operators[0]; op_ptr->name != END_OF_FILE; op_ptr++) {
             token->token_length = strlen(op_ptr->operator);
@@ -380,7 +376,6 @@ int get_token(TOKEN *token) {
                 text_ptr += token->token_length - 1;
 
                 token->token_class = OPERATOR;
-                // fprintf(stderr, "token->token_class = OPERATOR\n");
                 return OPERATOR;
             }
         }
