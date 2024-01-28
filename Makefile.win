@@ -1,5 +1,19 @@
 # Makefile for Windows
 
+ifeq ($(OS),Windows_NT)
+RM = del /Q /F
+CP = copy /Y
+ifdef ComSpec
+SHELL := $(ComSpec)
+endif
+ifdef COMSPEC
+SHELL := $(COMSPEC)
+endif
+else
+RM = rm -rf
+CP = cp -f
+endif
+
 SRCS =	convert.c	\
 	parse.c		\
 	declare.c	\
@@ -28,56 +42,52 @@ OBJS =	convert.o	\
 
 CC = gcc
 
-LNKS =	convert parse declare decl_out control io token context mem error version main
-
 TOKEN_HDRS = misc.h defs.h struct.h cvt.h cvt_id.h tokens.h
 HDRS =	$(TOKEN_HDRS) tkn_defs.h tkn_ext.h
 
-OPTS = -c -O -DWINDOWS -DMODERN -DDEBUG
+CFLAGS = -c -O -DWINDOWS -DMODERN -DDEBUG
 
 plm2c.exe:	$(OBJS)
 	$(CC) -o plm2c.exe $(OBJS)
 
 convert.o:	convert.c $(TOKEN_HDRS)
-	$(CC) $(OPTS) convert.c
+	$(CC) $(CFLAGS) convert.c
 
 parse.o:	parse.c $(TOKEN_HDRS) cvt_id.h
-	$(CC) $(OPTS) parse.c
+	$(CC) $(CFLAGS) parse.c
 
 declare.o:	declare.c $(TOKEN_HDRS)
-	$(CC) $(OPTS) declare.c
+	$(CC) $(CFLAGS) declare.c
 
 control.o:	control.c $(TOKEN_HDRS) tkn_ext.h
-	$(CC) $(OPTS) control.c
+	$(CC) $(CFLAGS) control.c
 
 decl_out.o:	decl_out.c $(TOKEN_HDRS)
-	$(CC) $(OPTS) decl_out.c
+	$(CC) $(CFLAGS) decl_out.c
 
 io.o:	io.c $(TOKEN_HDRS) tkn_ext.h
-	$(CC) $(OPTS) io.c
+	$(CC) $(CFLAGS) io.c
 
 token.o:	token.c $(TOKEN_HDRS) tkn_ext.h
-	$(CC) $(OPTS) token.c
+	$(CC) $(CFLAGS) token.c
 
 context.o:	context.c $(TOKEN_HDRS)
-	$(CC) $(OPTS) context.c
+	$(CC) $(CFLAGS) context.c
 
 mem.o:	mem.c $(TOKEN_HDRS)
-	$(CC) $(OPTS) mem.c
+	$(CC) $(CFLAGS) mem.c
 
 error.o:	error.c $(TOKEN_HDRS)
-	$(CC) $(OPTS) error.c
+	$(CC) $(CFLAGS) error.c
 
 version.o:	version.c
-	$(CC) $(OPTS) version.c
+	$(CC) $(CFLAGS) version.c
 
 main.o:	main.c $(TOKEN_HDRS) tkn_defs.h
-	$(CC) $(OPTS) main.c
+	$(CC) $(CFLAGS) main.c
 
-backup:
-	copy $(HDRS) Makefile bak
-	copy $(SRCS) bak
-
+.PHONY: clean
 clean:
-	del $(OBJS)
-	del plm2c.exe
+	-$(RM) *.o
+	-$(RM) plm2c.exe
+
