@@ -40,5 +40,3 @@ typedef bool BOOLEAN;
 #define is_white(ch) ((ch == ' ') || (ch == TAB))
 
 #define NONE 0
-
-void cvt_file(char *file_name);

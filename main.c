@@ -256,13 +256,14 @@ int main(int argc, char *argv[]) {
     if (ch != '.') {
         i = strlen(argv[1]);
     }
-
+#ifndef DEBUG
     /* Append a '.c' */
     strncpy_s(out_file_name, sizeof(out_file_name), argv[1], i);
     out_file_name[i] = '\0';
     strcat_s(out_file_name, sizeof(out_file_name), ".c");
 
     fprintf(stderr, "Output to: %s\n", out_file_name);
+#endif
 
     /* Get AT declaration list */
     get_at_decl();

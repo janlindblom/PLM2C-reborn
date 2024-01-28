@@ -13,6 +13,8 @@
 extern char *text_buffer;
 extern char *text_ptr;
 
+void cvt_file(char *file_name);
+
 /**
  *	Parse a control directive.
  *	Handles:		Abbreviation:
