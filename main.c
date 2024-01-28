@@ -43,7 +43,7 @@ void get_at_decl() {
 
     at_decl_count = 0;
 #ifdef MODERN
-    if ((fopen_s(&fd, "at_decl.cvt", O_RDONLY)) == -1)
+    if ((fopen_s(&fd, "at_decl.cvt", O_RDONLY)) != 0)
 #else
     if ((fd = open("at_decl.cvt", O_RDONLY)) == -1)
 #endif
@@ -133,12 +133,9 @@ void cvt_file(char *file_name) {
     }
 
     /* Allocate that much RAM */
-    fprintf(stderr, "Allocating %d bytes for %s\n", (int)file_stat.st_size + 1, file_name);
     text_buffer = get_mem((unsigned int)file_stat.st_size + 1);
 
     /* Read file */
-
-    fprintf(stderr, "Reading %ld bytes from %s\n", file_stat.st_size, file_name);
 
     nr = fread(text_buffer, 1, (int)file_stat.st_size, fd);
     if (nr == -1) {
@@ -168,7 +165,7 @@ void cvt_file(char *file_name) {
 /* Yes - open output file */
 #ifndef DEBUG
 #    ifdef MODERN
-        if (fopen_s(&ofd, out_file_name, "w") == -1)
+        if (fopen_s(&ofd, out_file_name, "w") != 0)
 #    else
         if ((ofd = fopen(out_file_name, "w")) == NULL)
 #    endif
@@ -230,11 +227,7 @@ void cvt_file(char *file_name) {
         text_ptr    = tmp_text_ptr;
         line_ptr    = tmp_line_ptr;
         line_count  = tmp_line_count;
-#ifdef MODERN
         strcpy_s(current_file_name, sizeof(current_file_name), tmp_file_name);
-#else
-        (void)strcpy(current_file_name, tmp_file_name);
-#endif
     } else {
         exit(0);
     }
@@ -247,8 +240,8 @@ int main(int argc, char *argv[]) {
     int  i;
     char ch;
 
-    if (argc != 2) {
-        (void)fprintf(stderr, "usage: %s filename\n", argv[0]);
+    if (argc < 2) {
+        fprintf(stderr, "usage: %s filename\n", argv[0]);
         exit(1);
     }
 
@@ -265,17 +258,10 @@ int main(int argc, char *argv[]) {
     }
 
     /* Append a '.c' */
-#ifdef MODERN
     strncpy_s(out_file_name, sizeof(out_file_name), argv[1], i);
-#else
-    (void)strncpy(out_file_name, argv[1], i);
-#endif
     out_file_name[i] = '\0';
-#ifdef MODERN
     strcat_s(out_file_name, sizeof(out_file_name), ".c");
-#else
-    (void)strcat(out_file_name, ".c");
-#endif
+
     fprintf(stderr, "Output to: %s\n", out_file_name);
 
     /* Get AT declaration list */
