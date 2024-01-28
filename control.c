@@ -13,7 +13,7 @@
 extern char *text_buffer;
 extern char *text_ptr;
 
-/*
+/**
  *	Parse a control directive.
  *	Handles:		Abbreviation:
  *		$INCLUDE	$IC
@@ -48,8 +48,7 @@ void parse_control() {
                     /* Copy and send file name (up to ')') */
                     include_ptr = include_file;
                     while (*text_ptr != ')') {
-                        if ((*text_ptr >= 'A') && (*text_ptr <= 'Z')) /* Convert to lower case */
-                        {
+                        if ((*text_ptr >= 'A') && (*text_ptr <= 'Z')) { /* Convert to lower case */
                             *include_ptr++ = *text_ptr++ + ' ';
                         } else {
                             *include_ptr++ = *text_ptr++;

@@ -15,7 +15,7 @@ BOOLEAN syntax_error;
 extern char *text_buffer, *text_ptr;
 extern int   line_count;
 
-/*
+/**
  *	Determine statement type and call appropriate parse routine.
  *	Return statement class or, if a reserved word, reserved word token.
  */
@@ -23,8 +23,8 @@ int parse_statement(TOKEN *first_token) {
     int token_type;
 
     /* Flush standard output and standard error */
-    //fflush(stdout);
-    //fflush(stderr);
+    fflush(stdout);
+    fflush(stderr);
 
     /* Flag no error yet */
     syntax_error = FALSE;

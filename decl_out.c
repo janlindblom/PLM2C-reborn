@@ -15,7 +15,7 @@ extern char *text_ptr;
 extern int   at_decl_count;
 extern char  at_decl_list[MAX_AT_DECLS][MAX_TOKEN_LENGTH];
 
-/*
+/**
  *	Output *<name> if use_parens == NULL, else (*<name>).
  */
 void out_pointer(TOKEN *name, BOOLEAN use_parens) {
@@ -32,7 +32,7 @@ void out_pointer(TOKEN *name, BOOLEAN use_parens) {
     }
 }
 
-/*
+/**
  *	Output array bound (if any)
  */
 void out_bound(TOKEN *bound) {
@@ -43,7 +43,7 @@ void out_bound(TOKEN *bound) {
     }
 }
 
-/*
+/**
  *	Output a declaration type.
  */
 void out_decl_type(DECL_MEMBER *decl_ptr) {
@@ -54,7 +54,7 @@ void out_decl_type(DECL_MEMBER *decl_ptr) {
     }
 }
 
-/*
+/**
  *	Output structure contents.
  */
 void out_struct(DECL_MEMBER *el_ptr) {
@@ -88,7 +88,7 @@ void out_struct(DECL_MEMBER *el_ptr) {
     out_char('}');
 }
 
-/*
+/**
  *	Output C declaration list member.
  */
 void out_decl_member(DECL_MEMBER *decl_list, TOKEN *decl_token) {
@@ -159,9 +159,7 @@ void out_decl_member(DECL_MEMBER *decl_list, TOKEN *decl_token) {
                 var_ptr->is_ext_at = TRUE;
             }
         }
-    } else
-
-        if (decl_list->initialization == DATA) {
+    } else if (decl_list->initialization == DATA) {
         out_str(TYPE_DATA);
         out_char(' ');
     }
@@ -273,7 +271,7 @@ void out_decl_member(DECL_MEMBER *decl_list, TOKEN *decl_token) {
             } else if (decl_list->type->token_type == POINTER) {
                 /* Yes - if based on an array */
                 /* output (*name) else output *name */
-                out_pointer(var_ptr->name, (BOOLEAN)decl_list->array_bound);
+                out_pointer(var_ptr->name, (BOOLEAN)(decl_list->array_bound != NULL));
             } else {
                 /* Output variable name */
                 out_token_name(var_ptr->name);
@@ -397,12 +395,7 @@ void out_decl_member(DECL_MEMBER *decl_list, TOKEN *decl_token) {
 #endif
 }
 
-#ifdef MODERN
-void out_decl(DECL *decl)
-#else
-out_decl(decl) DECL *decl;
-#endif
-{
+void out_decl(DECL *decl) {
     DECL_MEMBER *decl_list;
 
     while (decl) {
