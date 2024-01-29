@@ -33,28 +33,16 @@ int file_depth;
  *	Get list of AT declaration variables for EXTERNAL declaration checks
  */
 void get_at_decl() {
-#ifdef MODERN
     int   i;
     FILE *fd;
-#else
-    int i, fd;
-#endif
-    char ch;
+    char  ch;
 
     at_decl_count = 0;
-#ifdef MODERN
-    if ((fopen_s(&fd, "at_decl.cvt", O_RDONLY)) != 0)
-#else
-    if ((fd = open("at_decl.cvt", O_RDONLY)) == -1)
-#endif
+    if ((fopen_s(&fd, "at_decl.cvt", O_RDONLY)) != 0) {
         /* Not found */
         return;
-#ifdef MODERN
-    while (fread(&ch, 1, 1, fd) == 1)
-#else
-    while (read(fd, &ch, 1) == 1)
-#endif
-    {
+    }
+    while (fread(&ch, 1, 1, fd) == 1) {
         i = 0;
         if (!is_a_char(ch)) {
             fprintf(stderr, "Illegal identifier in line %d at_decl.cvt\n", at_decl_count + 1);
@@ -71,12 +59,7 @@ void get_at_decl() {
             }
 #endif
             at_decl_list[at_decl_count][i++] = ch;
-#ifdef MODERN
-            if (fread(&ch, 1, 1, fd) != 1)
-#else
-            if (read(fd, &ch, 1) != 1)
-#endif
-            {
+            if (fread(&ch, 1, 1, fd) != 1) {
                 fprintf(stderr, "Unexpected EOF in at_decl.cvt\n");
                 exit(1);
             }
@@ -159,12 +142,7 @@ void cvt_file(char *file_name) {
     if (file_depth++ == 0) {
 /* Yes - open output file */
 #ifndef DEBUG
-#    ifdef MODERN
-        if (fopen_s(&ofd, out_file_name, "w") != 0)
-#    else
-        if ((ofd = fopen(out_file_name, "w")) == NULL)
-#    endif
-        {
+        if (fopen_s(&ofd, out_file_name, "w") != 0) {
             (void)fprintf(stderr, "Cannot create output file %s", out_file_name);
             exit(1);
         }

@@ -66,11 +66,7 @@ void parse_control() {
 
                     /* Convert .plm to .c */
                     if (strcmp(include_ptr - 5, "plm")) {
-#ifdef MODERN
                         strcpy_s(include_ptr - 5, strlen(include_ptr - 5), ".c");
-#else
-                        (void)strcpy(include_ptr - 5, ".c");
-#endif
                         include_ptr -= 2;
                     }
 

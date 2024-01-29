@@ -24,7 +24,7 @@ extern char *out_string;
 /*
  *	PL/M Cast function equivalents
  */
- CVT_ID cast_functions[] = {
+CVT_ID cast_functions[] = {
     // clang-format off
 	"float",	TYPE_REAL,
 	"real",		TYPE_REAL,
@@ -369,13 +369,8 @@ int parse_simple_variable(TOKEN *token, TOKEN *next_token) {
             return ERROR;
         }
         /* Add .<identifier> to original token name */
-#ifdef MODERN
-        strcat_s(token->token_name, 512, ".");
-        strcat_s(token->token_name, 512, next_token->token_name);
-#else
-        (void)strcat(token->token_name, ".");
-        (void)strcat(token->token_name, next_token->token_name);
-#endif
+        strcat_s(token->token_name, sizeof(token->token_name), ".");
+        strcat_s(token->token_name, sizeof(token->token_name), next_token->token_name);
         /* Parse for additional member */
         return parse_simple_variable(token, next_token);
     }
@@ -483,12 +478,7 @@ int parse_member(TOKEN *token, DECL_MEMBER *decl, DECL_ID *decl_id) {
         }
 
         /* Find variable in list */
-#ifdef MODERN
-        if (!find_list_symbol(token, decl->struct_list, &var_decl, &var_decl_id))
-#else
-        if (!find_list_symbol(token, decl->struct_list, &var_decl, &var_decl_id))
-#endif
-        {
+        if (!find_list_symbol(token, decl->struct_list, &var_decl, &var_decl_id)) {
             parse_error("Undefined structure member");
             return ERROR;
         }
@@ -712,19 +702,11 @@ int parse_expression(TOKEN *token) {
 
                             do {
                                 token_class = get_token(token);
-                                if (token_class == STRING)
-#ifdef MODERN
-                                    strcat_s(string_const, 512, token->token_name);
-#else
-                                    (void)strcat(string_const, token->token_name);
-#endif
-                                else if (token_class == NUMERIC) {
+                                if (token_class == STRING) {
+                                    strcat_s(string_const, sizeof(string_const), token->token_name);
+                                } else if (token_class == NUMERIC) {
                                     cvt_octal(token, octal_const);
-#ifdef MODERN
-                                    strcat_s(string_const, 512, octal_const);
-#else
-                                    (void)strcat(string_const, octal_const);
-#endif
+                                    strcat_s(string_const, sizeof(string_const), octal_const);
                                 } else {
                                     parse_error("Illegal constant");
                                     return ERROR;
