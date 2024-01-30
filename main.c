@@ -38,7 +38,13 @@ void get_at_decl() {
     char  ch;
 
     at_decl_count = 0;
-    if ((fopen_s(&fd, "at_decl.cvt", O_RDONLY)) != 0) {
+#ifdef _WIN32
+    if ((fopen_s(&fd, "at_decl.cvt", O_RDONLY)) != 0)
+#else
+    fd = fopen("at_decl.cvt", "r");
+    if (fd == NULL)
+#endif
+    {
         /* Not found */
         return;
     }
@@ -91,14 +97,30 @@ void cvt_file(char *file_name) {
         tmp_text_ptr    = text_ptr;
         tmp_line_ptr    = line_ptr;
         tmp_line_count  = line_count;
+#ifdef _WIN32
         strcpy_s(tmp_file_name, sizeof(tmp_file_name), current_file_name);
+#else
+        strcpy(tmp_file_name, current_file_name);
+#endif
     }
 
     /* Save file name */
+
+#ifdef _WIN32
     strcpy_s(current_file_name, sizeof(current_file_name), file_name);
+#else
+    strcpy(current_file_name, file_name);
+#endif
 
     /* Open file */
-    if ((fopen_s(&fd, file_name, "r")) != 0) {
+
+#ifdef _WIN32
+    if ((fopen_s(&fd, file_name, "r")) != 0)
+#else
+    fd = fopen(file_name, "r");
+    if (fd == NULL)
+#endif
+    {
         fprintf(stderr, "Cannot open input file %s: ", file_name);
         perror("");
         exit(1);
@@ -134,7 +156,12 @@ void cvt_file(char *file_name) {
     out_init();
 
     /* Start with initial context using file name */
+
+#ifdef _WIN32
     strcpy_s(fname_token.token_name, sizeof(fname_token.token_name), file_name);
+#else
+    strcpy(fname_token.token_name, file_name);
+#endif
     fname_token.token_class = IDENTIFIER;
     new_context(MODULE, &fname_token);
 
@@ -142,7 +169,13 @@ void cvt_file(char *file_name) {
     if (file_depth++ == 0) {
 /* Yes - open output file */
 #ifndef DEBUG
-        if (fopen_s(&ofd, out_file_name, "w") != 0) {
+#    ifdef _WIN32
+        if (fopen_s(&ofd, out_file_name, "w") != 0)
+#    else
+        fd = fopen(out_file_name, "w");
+        if (fd == NULL)
+#    endif
+        {
             (void)fprintf(stderr, "Cannot create output file %s", out_file_name);
             exit(1);
         }
@@ -200,7 +233,11 @@ void cvt_file(char *file_name) {
         text_ptr    = tmp_text_ptr;
         line_ptr    = tmp_line_ptr;
         line_count  = tmp_line_count;
+#ifdef _WIN32
         strcpy_s(current_file_name, sizeof(current_file_name), tmp_file_name);
+#else
+        strcpy(current_file_name, tmp_file_name);
+#endif
     } else {
         exit(0);
     }
@@ -231,9 +268,18 @@ int main(int argc, char *argv[]) {
     }
 #ifndef DEBUG
     /* Append a '.c' */
+
+#    ifdef _WIN32
     strncpy_s(out_file_name, sizeof(out_file_name), argv[1], i);
+#    else
+    strncpy(out_file_name, argv[1], i);
+#    endif
     out_file_name[i] = '\0';
+#    ifdef _WIN32
     strcat_s(out_file_name, sizeof(out_file_name), ".c");
+#    else
+    strcat(out_file_name, ".c");
+#    endif
 
     fprintf(stderr, "Output to: %s\n", out_file_name);
 #endif

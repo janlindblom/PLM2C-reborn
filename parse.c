@@ -369,8 +369,14 @@ int parse_simple_variable(TOKEN *token, TOKEN *next_token) {
             return ERROR;
         }
         /* Add .<identifier> to original token name */
+
+#ifdef _WIN32
         strcat_s(token->token_name, sizeof(token->token_name), ".");
         strcat_s(token->token_name, sizeof(token->token_name), next_token->token_name);
+#else
+        strcat(token->token_name, ".");
+        strcat(token->token_name, next_token->token_name);
+#endif
         /* Parse for additional member */
         return parse_simple_variable(token, next_token);
     }
@@ -703,10 +709,18 @@ int parse_expression(TOKEN *token) {
                             do {
                                 token_class = get_token(token);
                                 if (token_class == STRING) {
+#ifdef _WIN32
                                     strcat_s(string_const, sizeof(string_const), token->token_name);
+#else
+                                    strcat(string_const, token->token_name);
+#endif
                                 } else if (token_class == NUMERIC) {
                                     cvt_octal(token, octal_const);
+#ifdef _WIN32
                                     strcat_s(string_const, sizeof(string_const), octal_const);
+#else
+                                    strcat(string_const, octal_const);
+#endif
                                 } else {
                                     parse_error("Illegal constant");
                                     return ERROR;

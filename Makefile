@@ -26,10 +26,12 @@ OBJS =	convert.o	\
 	version.o	\
 	main.o
 
+CC = gcc
+
 TOKEN_HDRS = misc.h defs.h struct.h cvt.h cvt_id.h tokens.h
 HDRS =	$(TOKEN_HDRS) tkn_defs.h tkn_ext.h
 
-OPTS = -c -O
+OPTS = -c -O -DMODERN
 
 plm2c:	$(OBJS)
 	$(CC) -o plm2c $(OBJS)

@@ -66,7 +66,11 @@ void parse_control() {
 
                     /* Convert .plm to .c */
                     if (strcmp(include_ptr - 5, "plm")) {
+#ifdef _WIN32
                         strcpy_s(include_ptr - 5, strlen(include_ptr - 5), ".c");
+#else
+                        strcpy(include_ptr - 5, ".c");
+#endif
                         include_ptr -= 2;
                     }
 

@@ -142,7 +142,12 @@ int get_token(TOKEN *token) {
         *token_name_ptr     = '\0';
 
         /* Get a copy of identifier */
+
+#ifdef _WIN32
         strcpy_s(id, sizeof(id), token->token_name);
+#else
+        strcpy(id, token->token_name);
+#endif
         /* If lower-case, convert to upper case for comparison */
         if (is_a_lc_char(*id)) {
             for (id_ptr = id; *id_ptr; id_ptr++) {
@@ -196,7 +201,12 @@ int get_token(TOKEN *token) {
                 }
 
                     /* Switch to appropriate operator */
+
+#ifdef _WIN32
                 strcpy_s(token->token_name, sizeof(token->token_name), op_name);
+#else
+                strcpy(token->token_name, op_name);
+#endif
                 token->token_class = OPERATOR;
                 return OPERATOR;
             }
@@ -361,7 +371,12 @@ int get_token(TOKEN *token) {
             if (!strncmp(text_ptr - 1, op_ptr->oper, token->token_length)) {
                 /* Found operator */
                 /* Save converted type */
+
+#ifdef _WIN32
                 strcpy_s(token->token_name, sizeof(token->token_name), op_ptr->cvt_oper);
+#else
+                strcpy(token->token_name, op_ptr->cvt_oper);
+#endif
                 token->token_type = op_ptr->name;
                 /* Point past operator */
                 text_ptr += token->token_length - 1;
@@ -450,7 +465,11 @@ int get_token(TOKEN *token) {
 void token_copy(TOKEN *src, TOKEN *dest) {
     dest->token_class = src->token_class;
     dest->token_type  = src->token_type;
+#ifdef _WIN32
     strcpy_s(dest->token_name, sizeof(dest->token_name), src->token_name);
+#else
+    strcpy(dest->token_name, src->token_name);
+#endif
     dest->token_start       = src->token_start;
     dest->token_length      = src->token_length;
     dest->white_space_start = src->white_space_start;
