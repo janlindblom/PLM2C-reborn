@@ -47,6 +47,13 @@ HDRS =	$(TOKEN_HDRS) tkn_defs.h tkn_ext.h
 
 CFLAGS = -c -O
 
+all: plm2c.exe
+
+.PHONY: debug clean
+
+debug: CFLAGS += -g -DDEBUG
+debug: clean plm2c.exe
+
 plm2c.exe:	$(OBJS)
 	$(CC) -o plm2c.exe $(OBJS)
 
