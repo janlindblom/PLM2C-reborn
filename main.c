@@ -172,8 +172,8 @@ void cvt_file(char *file_name) {
 #    ifdef _WIN32
         if (fopen_s(&ofd, out_file_name, "w") != 0)
 #    else
-        fd = fopen(out_file_name, "w");
-        if (fd == NULL)
+        ofd = fopen(out_file_name, "w");
+        if (ofd == NULL)
 #    endif
         {
             (void)fprintf(stderr, "Cannot create output file %s", out_file_name);

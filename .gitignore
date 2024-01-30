@@ -2,3 +2,4 @@
 *.exe
 plm2c
 build/
+.vscode/settings.json
