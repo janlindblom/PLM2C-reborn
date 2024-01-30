@@ -31,7 +31,14 @@ CC = gcc
 TOKEN_HDRS = misc.h defs.h struct.h cvt.h cvt_id.h tokens.h
 HDRS =	$(TOKEN_HDRS) tkn_defs.h tkn_ext.h
 
-OPTS = -g -c -O -DMODERN
+OPTS = -c -O -DMODERN
+
+all: plm2c
+
+.PHONY: debug clean
+
+debug: OPTS += -g -DDEBUG
+debug: clean plm2c
 
 plm2c:	$(OBJS)
 	$(CC) -o plm2c $(OBJS)
@@ -73,11 +80,9 @@ main.o:	main.c $(TOKEN_HDRS) tkn_defs.h
 	$(CC) $(OPTS) main.c
 
 backup:
+	mkdir bak
 	cp $(HDRS) Makefile bak
 	cp $(SRCS) bak
 
-lint:
-	lint $(SRCS)
-
 clean:
-	rm -f $(OBJS)
+	rm -f $(OBJS) plm2c
