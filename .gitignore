@@ -2,4 +2,6 @@
 *.exe
 plm2c
 build/
+builddir/
+.cache/
 .vscode/settings.json
